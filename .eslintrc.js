@@ -1,5 +1,5 @@
 module.exports = {
-    extends: ['ks-typescript'],
+    extends: ['@ks-stack/typescript'],
     parserOptions: {
         project: './tsconfig.json',
     },
