@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "allowJs": true,
+        "module": "commonjs",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "jsx": "react",
+        "lib": ["ES2019"],
+        "moduleResolution": "node",
+        "strict": true,
+        "target": "esnext",
+        "baseUrl": "./",
+        "resolveJsonModule": true,
+        "paths": {
+        },
+        "rootDir": "./",
+        "outDir": "output"
+    },
+    "exclude": [
+        "output",
+        "node_modules",
+    ]
+}
