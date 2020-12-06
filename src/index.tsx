@@ -96,18 +96,6 @@ export default class List extends React.PureComponent<ListViewProps> {
         }
     }
 
-    scrollTo = (option?: { x?: number; y?: number; animated?: boolean; duration?: number }) => {
-        this.ref.current?._component.scrollTo(option);
-    };
-
-    scrollToEnd = (option?: { animated?: boolean; duration?: number }) => {
-        this.ref.current?._component.scrollToEnd(option);
-    };
-
-    flashScrollIndicators = () => {
-        this.ref.current?._component.flashScrollIndicators();
-    };
-
     private onVisibleItemsChange = () => {
         const { onVisibleItemsChange } = this.props;
         const { firstIndex, lastIndex } = findRangeIndex(this.itemOffsets, this.contentOffset, this.containerSizeMain);
@@ -150,6 +138,18 @@ export default class List extends React.PureComponent<ListViewProps> {
             this.forceUpdate();
         }
         onLayout?.(e);
+    };
+
+    scrollTo = (option?: { x?: number; y?: number; animated?: boolean; duration?: number }) => {
+        this.ref.current?._component.scrollTo(option);
+    };
+
+    scrollToEnd = (option?: { animated?: boolean; duration?: number }) => {
+        this.ref.current?._component.scrollToEnd(option);
+    };
+
+    flashScrollIndicators = () => {
+        this.ref.current?._component.flashScrollIndicators();
     };
 
     render() {
