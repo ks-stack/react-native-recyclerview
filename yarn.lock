@@ -2202,10 +2202,10 @@ eslint-config-airbnb@^18.1.0, eslint-config-airbnb@^18.2.0:
     object.assign "^4.1.0"
     object.entries "^1.1.2"
 
-eslint-config-ks-typescript@^0.0.7:
-  version "0.0.7"
-  resolved "http://172.16.1.179:4873/eslint-config-ks-typescript/-/eslint-config-ks-typescript-0.0.7.tgz#2d4c9ceaf02afaef0dbee931729093a26e4efe5b"
-  integrity sha512-uSx2wIg0WKHxy+Dtmfav8yNRv1IXv1XZDMRBVJrTNUo95K9tj9Bmj5wNRtrWgMtjIGjbvxKZLTy1j5+4gYnCyA==
+eslint-config-ks-typescript@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.npmjs.org/eslint-config-ks-typescript/-/eslint-config-ks-typescript-0.0.6.tgz#bed43de65b646d6ae697c9731a213fbb929c7126"
+  integrity sha512-Q7ueh//ZnqW5L3D3GSvRnrDw9fS+BNvoa/9LlpXa+Rf26Us79bqmg9rdroXwe/+sTvZJ4Ks1p1ZMP1qebgv74w==
   dependencies:
     "@react-native-community/eslint-config" "^0.0.3"
     "@typescript-eslint/eslint-plugin" "^3.5.0"
