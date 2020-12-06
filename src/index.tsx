@@ -1,5 +1,13 @@
 import React from 'react';
-import { Animated, ScrollViewProps, StyleSheet, LayoutChangeEvent, ScrollView } from 'react-native';
+import {
+    Animated,
+    ScrollViewProps,
+    StyleSheet,
+    LayoutChangeEvent,
+    ScrollView,
+    NativeScrollEvent,
+    NativeSyntheticEvent,
+} from 'react-native';
 import ShareManager, { RenderForItem } from './Item';
 import { getPosition, findRangeIndex } from './utils';
 
@@ -119,7 +127,7 @@ export default class List extends React.PureComponent<ListViewProps> {
         }
     };
 
-    private onScroll = (e: any) => {
+    private onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
         const { onEndReached, horizontal, onScroll } = this.props;
         this.contentOffset = horizontal ? e.nativeEvent.contentOffset.x : e.nativeEvent.contentOffset.y;
         this.onVisibleItemsChange();
