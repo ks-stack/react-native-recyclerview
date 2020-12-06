@@ -125,9 +125,8 @@ DEPENDENCIES:
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  http://gitlab.devops.kaishustory.com/ios/KSThirdPartCocoaPods.git:
-    - boost-for-react-native
   https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
+    - boost-for-react-native
     - libwebp
     - SDWebImage
     - SDWebImageWebPCoder
@@ -179,7 +178,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  boost-for-react-native: 906b202ed1427cb4f2015763f2672b736f6a30d6
+  boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
