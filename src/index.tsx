@@ -7,8 +7,9 @@ import {
     ScrollView,
     NativeScrollEvent,
     NativeSyntheticEvent,
+    Platform,
 } from 'react-native';
-import ShareManager, { RenderForItem } from './Item';
+import ShareManager, { RenderForItem } from './ShareManager';
 import { getPosition, findRangeIndex } from './utils';
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
@@ -83,7 +84,7 @@ export default class List extends React.PureComponent<ListViewProps> {
             return;
         }
         if (countForItem > 0 && this.firstOnVisibleItemsChange) {
-            this.onVisibleItemsChange();
+            this.onContentOffsetChange();
         }
         if (onEndReached && countForItem > 0 && this.onLoadedOffset <= this.containerSizeMain) {
             this.onEndReached(
@@ -104,17 +105,37 @@ export default class List extends React.PureComponent<ListViewProps> {
         }
     }
 
-    private onVisibleItemsChange = () => {
+    private onContentOffsetChange = () => {
         const { onVisibleItemsChange } = this.props;
-        const { firstIndex, lastIndex } = findRangeIndex(this.itemOffsets, this.contentOffset, this.containerSizeMain);
-        if (this.firstItemIndex !== firstIndex || this.lastItemIndex !== lastIndex) {
-            this.firstItemIndex = firstIndex;
-            this.lastItemIndex = lastIndex;
-            this.shareManagerRef.current?.update(this.firstItemIndex, this.lastItemIndex);
-            if (onVisibleItemsChange) {
-                onVisibleItemsChange(this.firstItemIndex, this.lastItemIndex);
+        // 由于安卓更新效率较低，需要预渲染
+        if (Platform.OS === 'ios') {
+            const { firstIndex, lastIndex } = findRangeIndex(
+                this.itemOffsets,
+                this.contentOffset,
+                this.containerSizeMain,
+            );
+            if (this.firstItemIndex !== firstIndex || this.lastItemIndex !== lastIndex) {
+                this.firstItemIndex = firstIndex;
+                this.lastItemIndex = lastIndex;
+                this.shareManagerRef.current?.update(this.firstItemIndex, this.lastItemIndex);
+                onVisibleItemsChange?.(this.firstItemIndex, this.lastItemIndex);
+                this.firstOnVisibleItemsChange = false;
             }
-            this.firstOnVisibleItemsChange = false;
+        } else {
+            if (onVisibleItemsChange) {
+                const { firstIndex, lastIndex } = findRangeIndex(
+                    this.itemOffsets,
+                    this.contentOffset,
+                    this.containerSizeMain,
+                );
+                if (this.firstItemIndex !== firstIndex || this.lastItemIndex !== lastIndex) {
+                    this.firstItemIndex = firstIndex;
+                    this.lastItemIndex = lastIndex;
+                    onVisibleItemsChange?.(this.firstItemIndex, this.lastItemIndex);
+                    this.firstOnVisibleItemsChange = false;
+                }
+            }
+            this.shareManagerRef.current?.onContentOffsetChange(this.contentOffset);
         }
     };
 
@@ -130,7 +151,7 @@ export default class List extends React.PureComponent<ListViewProps> {
     private onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
         const { onEndReached, horizontal, onScroll } = this.props;
         this.contentOffset = horizontal ? e.nativeEvent.contentOffset.x : e.nativeEvent.contentOffset.y;
-        this.onVisibleItemsChange();
+        this.onContentOffsetChange();
         onScroll?.(e);
         if (onEndReached) {
             this.onEndReached(horizontal ? e.nativeEvent.contentSize.width : e.nativeEvent.contentSize.height);

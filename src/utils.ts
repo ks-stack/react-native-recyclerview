@@ -29,7 +29,7 @@ export function getPosition(option: {
     const itemOffsets = [];
     let currentShareIndex = 0;
     for (let i = 0; i < shareCount; i++) {
-        inputs.push(i === 0 ? [Number.MIN_SAFE_INTEGER] : []);
+        inputs.push([Number.MIN_SAFE_INTEGER]);
         outputs.push(i === 0 ? [sumHeight] : []);
         lastOffset.push(sumHeight);
         shareGroup.push([]);
@@ -39,18 +39,16 @@ export function getPosition(option: {
         const itemHeight = heightForItem(i);
         itemHeightList.push(itemHeight);
         shareGroup[currentShareIndex].push(i);
+        if (i === countForItem - 1) break;
         currentShareIndex += 1;
         currentShareIndex %= shareCount;
-        if (i === countForItem - 1) break;
-        if (inputs[currentShareIndex].length === 0) {
-            inputs[currentShareIndex].push(Number.MIN_SAFE_INTEGER);
-        }
+
         // 安卓需要预渲染下一个item
         const input =
             Platform.OS === 'ios' ? sumHeight - containerSizeMain + itemHeight : sumHeight - containerSizeMain;
-        sumHeight += itemHeight;
         inputs[currentShareIndex].push(input);
-        inputs[currentShareIndex].push(input + 0.001);
+        inputs[currentShareIndex].push(input);
+        sumHeight += itemHeight;
         if (outputs[currentShareIndex].length === 0) {
             outputs[currentShareIndex].push(sumHeight);
             outputs[currentShareIndex].push(sumHeight);

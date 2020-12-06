@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View } from 'react-native';
 
 export type RenderForItem = (index: number, size: { height: number; width: number }) => React.ReactElement;
 
 interface Props {
     output: number[];
+    input: number[];
     indexes: number[];
     renderForItem: RenderForItem;
     itemHeightList: number[];
@@ -19,13 +20,33 @@ interface Props {
 export default class Share extends React.Component<Props> {
     private currentIndex = -1;
 
+    private noRepeatOutput: number[] = [];
+
+    constructor(props: Props) {
+        super(props);
+        this.noRepeatOutput = [...new Set(props.output)];
+    }
+
+    UNSAFE_componentWillReceiveProps(next: Props) {
+        if (next.output !== this.props.output) {
+            this.noRepeatOutput = [...new Set(next.output)];
+        }
+    }
+
+    // 目前仅做安卓更新用
+    onContentOffsetChange = (offset: number) => {
+        const index = this.noRepeatOutput.findIndex((v) => v > offset - 100);
+        if (index !== this.currentIndex) {
+            this.currentIndex = index;
+            this.forceUpdate();
+        }
+    };
+
+    // 目前仅做ios更新用
     update = (firstIndex: number, lastIndex: number) => {
         const { indexes } = this.props;
-        // 安卓需要预渲染下一个item
-        const index =
-            Platform.OS === 'ios'
-                ? indexes.findIndex((v) => v >= firstIndex - 0 && v <= lastIndex + 0)
-                : indexes.findIndex((v) => v >= firstIndex - 1 && v <= lastIndex + 1);
+        const index = indexes.findIndex((v) => v >= firstIndex - 0 && v <= lastIndex + 0);
+        // const index = indexes.findIndex((v) => v >= firstIndex - 1 && v <= lastIndex + 1);
         if (index !== this.currentIndex) {
             this.currentIndex = index;
             this.forceUpdate();
@@ -33,7 +54,7 @@ export default class Share extends React.Component<Props> {
     };
 
     render() {
-        const { indexes, renderForItem, itemHeightList, debug, horizontal, containerSize } = this.props;
+        const { indexes, renderForItem, itemHeightList, debug, horizontal, containerSize, input, output } = this.props;
         if (indexes[this.currentIndex] === undefined) {
             return null;
         }

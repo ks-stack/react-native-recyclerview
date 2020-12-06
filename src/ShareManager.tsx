@@ -37,6 +37,12 @@ export default class ShareManager extends React.PureComponent<Props> {
         }
     }
 
+    // 目前仅做安卓更新用
+    onContentOffsetChange = (offset: number) => {
+        this.shareRefs.forEach((v) => v.current?.onContentOffsetChange(offset));
+    };
+
+    // 目前仅做ios更新用
     update = (firstIndex: number, lastIndex: number) => {
         this.shareRefs.forEach((v) => v.current?.update(firstIndex, lastIndex));
     };
@@ -70,6 +76,7 @@ export default class ShareManager extends React.PureComponent<Props> {
                     <Share
                         indexes={indexes}
                         output={outputs[index]}
+                        input={inputs[index]}
                         renderForItem={renderForItem}
                         itemHeightList={itemHeightList}
                         debug={debug}
