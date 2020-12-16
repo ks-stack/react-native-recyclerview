@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from 'react-native-fast-image';
-import { View, Text } from 'react-native';
 
 interface Props {
     data: string;
@@ -21,17 +20,9 @@ export default class Item extends React.PureComponent<Props> {
         const { loaded } = this.state;
         return (
             <>
-                {!loaded && <Image style={[size, { position: 'absolute' }]} source={require('./default.png')} />}
-                <Image style={size} onLoadEnd={this.onLoadEnd} source={{ uri: data }} />
+                {/* {!loaded && <Image style={[size, { position: 'absolute' }]} source={require('./default.png')} />} */}
+                <Image style={[size]} onLoadEnd={this.onLoadEnd} source={{ uri: data }} />
             </>
-        );
-        return (
-            <View style={[size, { alignItems: 'center', justifyContent: 'center' }]}>
-                <Text>55555555555555555</Text>
-                <Text>55555555555555555</Text>
-                <Text>55555555555555555</Text>
-                <Text>55555555555555555</Text>
-            </View>
         );
     }
 }

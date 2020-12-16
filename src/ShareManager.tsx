@@ -6,7 +6,7 @@ export type ShareRefs = React.RefObject<Share>[];
 export * from './Share';
 
 interface Props {
-    shareGroup: number[][];
+    shareGroup: number[][][];
     inputs: number[][];
     outputs: number[][];
     renderForItem: RenderForItem;
@@ -14,12 +14,13 @@ interface Props {
     offset: Animated.Value;
     itemOffsets: number[];
     debug?: boolean;
-    horizontal?: boolean;
-    preShareCount?: number;
+    horizontal?: boolean | null;
     containerSize: {
         height: number;
         width: number;
     };
+    containerSizeMain: number;
+    preOffset: number;
 }
 
 export default class ShareManager extends React.PureComponent<Props> {
@@ -37,14 +38,8 @@ export default class ShareManager extends React.PureComponent<Props> {
         }
     }
 
-    // 目前仅做安卓更新用
-    onContentOffsetChange = (offset: number) => {
-        this.shareRefs.forEach((v) => v.current?.onContentOffsetChange(offset));
-    };
-
-    // 目前仅做ios更新用
-    update = (firstIndex: number, lastIndex: number) => {
-        this.shareRefs.forEach((v) => v.current?.update(firstIndex, lastIndex));
+    update = (contentOffset: number, isForward?: boolean) => {
+        this.shareRefs.forEach((v) => v.current?.update(contentOffset, isForward));
     };
 
     render() {
@@ -58,9 +53,11 @@ export default class ShareManager extends React.PureComponent<Props> {
             debug,
             horizontal,
             containerSize,
+            containerSizeMain,
+            preOffset,
         } = this.props;
         return shareGroup.map((indexes, index) => {
-            let transform;
+            let transform: any;
             if (inputs[index].length > 1) {
                 transform = [
                     {
@@ -75,14 +72,16 @@ export default class ShareManager extends React.PureComponent<Props> {
                 <Animated.View key={index} style={[{ transform }, horizontal ? styles.horizontalAbs : styles.abs]}>
                     <Share
                         indexes={indexes}
-                        output={outputs[index]}
-                        input={inputs[index]}
                         renderForItem={renderForItem}
                         itemHeightList={itemHeightList}
                         debug={debug}
                         ref={this.shareRefs[index]}
                         horizontal={horizontal}
                         containerSize={containerSize}
+                        containerSizeMain={containerSizeMain}
+                        input={inputs[index]}
+                        output={outputs[index]}
+                        preOffset={preOffset}
                     />
                 </Animated.View>
             );

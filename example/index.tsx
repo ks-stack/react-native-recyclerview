@@ -15,16 +15,7 @@ export default class App extends React.Component<Props> {
     onEndReached = () => {};
 
     heightForItem = (index: number) => {
-        if (index % 4 === 1) {
-            return 250;
-        }
-        if (index % 4 === 2) {
-            return 300;
-        }
-        if (index % 4 === 3) {
-            return 350;
-        }
-        return 400;
+        return 200;
     };
 
     renderForItem = (index: number, size: { height: number; width: number }) => (
@@ -59,7 +50,9 @@ export default class App extends React.Component<Props> {
                     // heightForFooter={100}
                     // renderForFooter={this.renderForFooter}
                     countForItem={images.length}
-                    shareCount={8}
+                    // shareCount={6}
+                    shareMinHeight={200}
+                    preOffset={500}
                     // debug
                     style={styles.style}
                     onEndReachedThreshold={1}

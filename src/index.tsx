@@ -10,7 +10,7 @@ import {
     Platform,
 } from 'react-native';
 import ShareManager, { RenderForItem } from './ShareManager';
-import { getPosition, findRangeIndex } from './utils';
+import { getPosition, findRangeIndex, getShareCount } from './utils';
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
@@ -20,16 +20,17 @@ export interface ListViewProps extends ScrollViewProps {
     renderForHeader?: () => React.ReactElement | null;
     renderForItem: RenderForItem;
     renderForFooter?: () => React.ReactElement | null;
+    ListEmptyComponent?: () => React.ReactElement | React.ReactElement | null;
 
     heightForItem: (index: number) => number;
     heightForHeader?: number;
     heightForFooter?: number;
 
-    ListEmptyComponent?: () => React.ReactElement | React.ReactElement | null;
-
     debug?: boolean;
 
     shareCount?: number;
+    shareMinHeight?: number;
+    preOffset?: number;
 
     onEndReachedThreshold?: number;
     onEndReached?: (distanceFromEnd: number) => void;
@@ -83,6 +84,10 @@ export default class List extends React.PureComponent<ListViewProps> {
         if (!this.containerSizeMain) {
             return;
         }
+        if (countForItem < oldProps.countForItem) {
+            this.onLoadedOffset = 0;
+            this.firstOnVisibleItemsChange = true;
+        }
         if (countForItem > 0 && this.firstOnVisibleItemsChange) {
             this.onContentOffsetChange();
         }
@@ -93,10 +98,6 @@ export default class List extends React.PureComponent<ListViewProps> {
                     .reduce((sum, v, i) => sum + heightForItem(i), 0),
             );
         }
-        if (countForItem < oldProps.countForItem) {
-            this.onLoadedOffset = 0;
-            this.firstOnVisibleItemsChange = true;
-        }
         if (horizontal !== oldProps.horizontal) {
             const event = horizontal
                 ? [{ nativeEvent: { contentOffset: { x: this.offset } } }]
@@ -105,44 +106,31 @@ export default class List extends React.PureComponent<ListViewProps> {
         }
     }
 
-    private onContentOffsetChange = () => {
+    private onContentOffsetChange = (isForward?: boolean) => {
         const { onVisibleItemsChange } = this.props;
-        // 由于安卓更新效率较低，需要预渲染
-        if (Platform.OS === 'ios') {
+        this.shareManagerRef.current?.update(this.contentOffset, isForward);
+        if (onVisibleItemsChange) {
             const { firstIndex, lastIndex } = findRangeIndex(
                 this.itemOffsets,
                 this.contentOffset,
                 this.containerSizeMain,
             );
             if (this.firstItemIndex !== firstIndex || this.lastItemIndex !== lastIndex) {
+                this.firstOnVisibleItemsChange = false;
                 this.firstItemIndex = firstIndex;
                 this.lastItemIndex = lastIndex;
-                this.shareManagerRef.current?.update(this.firstItemIndex, this.lastItemIndex);
                 onVisibleItemsChange?.(this.firstItemIndex, this.lastItemIndex);
-                this.firstOnVisibleItemsChange = false;
             }
-        } else {
-            if (onVisibleItemsChange) {
-                const { firstIndex, lastIndex } = findRangeIndex(
-                    this.itemOffsets,
-                    this.contentOffset,
-                    this.containerSizeMain,
-                );
-                if (this.firstItemIndex !== firstIndex || this.lastItemIndex !== lastIndex) {
-                    this.firstItemIndex = firstIndex;
-                    this.lastItemIndex = lastIndex;
-                    onVisibleItemsChange?.(this.firstItemIndex, this.lastItemIndex);
-                    this.firstOnVisibleItemsChange = false;
-                }
-            }
-            this.shareManagerRef.current?.onContentOffsetChange(this.contentOffset);
         }
     };
 
     private onEndReached = (contentHeight: number) => {
         const { onEndReached, onEndReachedThreshold = 1 } = this.props;
         const distanceFromEnd = contentHeight - this.contentOffset - this.containerSizeMain;
-        if (distanceFromEnd <= onEndReachedThreshold * this.containerSizeMain && contentHeight > this.onLoadedOffset) {
+        if (
+            this.onLoadedOffset <= this.containerSizeMain ||
+            (distanceFromEnd <= onEndReachedThreshold * this.containerSizeMain && contentHeight > this.onLoadedOffset)
+        ) {
             this.onLoadedOffset = contentHeight;
             onEndReached?.(distanceFromEnd);
         }
@@ -150,8 +138,10 @@ export default class List extends React.PureComponent<ListViewProps> {
 
     private onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
         const { onEndReached, horizontal, onScroll } = this.props;
-        this.contentOffset = horizontal ? e.nativeEvent.contentOffset.x : e.nativeEvent.contentOffset.y;
-        this.onContentOffsetChange();
+        const nextContentOffset = horizontal ? e.nativeEvent.contentOffset.x : e.nativeEvent.contentOffset.y;
+        const isForward = nextContentOffset > this.contentOffset;
+        this.contentOffset = nextContentOffset;
+        this.onContentOffsetChange(isForward);
         onScroll?.(e);
         if (onEndReached) {
             this.onEndReached(horizontal ? e.nativeEvent.contentSize.width : e.nativeEvent.contentSize.height);
@@ -193,14 +183,17 @@ export default class List extends React.PureComponent<ListViewProps> {
             heightForHeader,
             heightForFooter,
             renderForFooter,
-            shareCount,
+            shareMinHeight = 150,
+            preOffset = Platform.OS === 'ios' ? 0 : 500,
         } = this.props;
         const { height, width } = this.containerSize;
+        const shareCount = getShareCount(this.containerSizeMain + preOffset * 2, shareMinHeight, this.props.shareCount);
+
         const { outputs, inputs, sumHeight, shareGroup, itemOffsets = [], itemHeightList } = getPosition({
-            containerSizeMain: this.containerSizeMain,
+            containerSizeMain: this.containerSizeMain + preOffset * 2,
             heightForItem,
             countForItem,
-            horizontal,
+            shareMinHeight,
             heightForHeader,
             heightForFooter,
             shareCount,
@@ -247,6 +240,8 @@ export default class List extends React.PureComponent<ListViewProps> {
                     horizontal={horizontal}
                     itemOffsets={this.itemOffsets}
                     containerSize={this.containerSize}
+                    containerSizeMain={this.containerSizeMain}
+                    preOffset={preOffset}
                 />
                 {FooterComponent}
             </AnimatedScrollView>
