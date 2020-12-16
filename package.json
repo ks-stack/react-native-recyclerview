@@ -2,6 +2,10 @@
   "name": "@ks-stack/react-native-recyclerview",
   "version": "0.0.2",
   "private": false,
+  "main": "src",
+  "files": [
+    "src"
+  ],
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
