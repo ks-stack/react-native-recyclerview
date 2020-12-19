@@ -21,7 +21,7 @@ Prop name              | Description   | Type      | Default value | Required
 `heightForHeader`      | 列表头部的高度 | number | none | false
 `renderForFooter`      | 列表尾部的渲染方法，注意尾部不会复用，会一直存在 | funtion | none | false
 `heightForFooter`      | 列表尾部的高度 | number | none | false
-`ListEmptyComponent`   | 列表为空时渲染的组件 | funtion | component | none | false
+`ListEmptyComponent`   | 列表为空时渲染的组件 | funtion \| component | none | false
 `preOffset`            | 预渲染的偏移量，增大该数值可减少图片渲染慢的白屏几率 | number | ios100，安卓800，因为glide渲染图片实在太慢了 | false
 `onEndReachedThreshold`| 同`FlatList` | number | 1 | false
 `onEndReached`         | 同`FlatList` | funtion | none | false
