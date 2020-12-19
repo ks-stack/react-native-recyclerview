@@ -16,7 +16,7 @@ Prop name              | Description   | Type      | Default value | Required
 -----------------------|---------------|-----------|---------------|---------
 `countForItem`         | 列表元素的总数量 | number | none | true
 `renderForItem`        | 列表元素的渲染方法 | funtion | none | true
-`heightForItem`        | 列表元素的高度，传入数值时采用`react-native-largelist`的模式，传入方法时采用`recyclerlistview`的模式 | funtion | none | true
+`heightForItem`        | 列表元素的高度，传入数值时采用`react-native-largelist`的模式，传入方法时采用`recyclerlistview`的模式 | funtion \| number | none | true
 `renderForHeader`      | 列表头部的渲染方法，注意头部不会复用，会一直存在 | funtion | none | false
 `heightForHeader`      | 列表头部的高度 | number | none | false
 `renderForFooter`      | 列表尾部的渲染方法，注意尾部不会复用，会一直存在 | funtion | none | false
