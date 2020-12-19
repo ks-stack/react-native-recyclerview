@@ -15,7 +15,7 @@ export default class App extends React.Component<Props> {
     onEndReached = () => {};
 
     heightForItem = (index: number) => {
-        return 100 + Math.random() * 25;
+        return 125 + Math.random() * 50;
     };
 
     renderForItem = (index: number, style: ItemStyle) => <Item index={index} style={style} data={images[index]} />;
@@ -44,12 +44,12 @@ export default class App extends React.Component<Props> {
                     renderForItem={this.renderForItem}
                     // heightForItem={this.heightForItem}
                     heightForItem={150}
-                    // heightForHeader={100}
-                    // renderForHeader={this.renderForHeader}
-                    // heightForFooter={100}
-                    // renderForFooter={this.renderForFooter}
+                    heightForHeader={100}
+                    renderForHeader={this.renderForHeader}
+                    heightForFooter={100}
+                    renderForFooter={this.renderForFooter}
                     countForItem={images.length}
-                    // preOffset={100}
+                    // preOffset={200}
                     style={styles.style}
                     onEndReachedThreshold={1}
                     onEndReached={this.onEndReached}
@@ -62,7 +62,7 @@ export default class App extends React.Component<Props> {
     }
 }
 
-const marginHeight = 10;
+const marginHeight = 0;
 const styles = StyleSheet.create({
     // style: { overflow: 'visible', flex: 1 },
     style: { overflow: 'hidden', flex: 1 },

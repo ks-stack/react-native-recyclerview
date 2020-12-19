@@ -15,7 +15,6 @@ export default class Item extends React.PureComponent<Props> {
         return (
             <View style={style}>
                 <Image style={{ height: style.height, width: style.width }} source={{ uri: data }} />
-                <Text style={{ position: 'absolute' }}>5555555555555</Text>
                 <Text style={{ position: 'absolute', fontSize: 40, color: 'red', fontWeight: 'bold' }}>{index}</Text>
             </View>
         );

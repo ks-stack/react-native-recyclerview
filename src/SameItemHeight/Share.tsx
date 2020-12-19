@@ -8,26 +8,52 @@ interface Props {
     containerSize: { height: number; width: number };
     containerSizeMain: number;
     heightForItem: number;
+    preOffset: number;
+    output: number[];
+    input: number[];
 }
 
 export default class Share extends React.Component<Props> {
     private currentIndex = -1;
 
-    update = (contentOffset: number, isForward?: boolean) => {
-        const { indexes, heightForItem, containerSizeMain } = this.props;
-        let index = -1;
-        if (isForward) {
-            index = indexes.findIndex((v) => (v + 1) * heightForItem >= contentOffset);
-        } else {
-            index = indexes.findIndex((v) => {
-                return v >= (contentOffset + containerSizeMain) / heightForItem;
-            });
-            index -= 1;
-        }
+    private noRepeatOutput!: number[];
 
-        if (index > -1 && index !== this.currentIndex) {
-            this.currentIndex = index;
-            this.forceUpdate();
+    constructor(props: Props) {
+        super(props);
+        this.noRepeatOutput = [...new Set(props.output)];
+    }
+
+    UNSAFE_componentWillReceiveProps(next: Props) {
+        if (next.output !== this.props.output) {
+            this.noRepeatOutput = [...new Set(next.output)];
+        }
+    }
+
+    update = (contentOffset: number, isForward?: boolean) => {
+        const { input, output, preOffset } = this.props;
+        if (isForward) {
+            const offset = preOffset + contentOffset;
+            for (let i = 0; i < input.length; i++) {
+                if (offset >= input[i] && offset <= input[i + 1]) {
+                    const index = this.noRepeatOutput.indexOf(output[i]);
+                    if (index > -1 && index !== this.currentIndex) {
+                        this.currentIndex = index;
+                        this.forceUpdate();
+                    }
+                    break;
+                }
+            }
+        } else {
+            for (let i = 0; i < input.length; i++) {
+                if (contentOffset >= input[i] && contentOffset <= input[i + 1]) {
+                    const index = this.noRepeatOutput.indexOf(output[i]);
+                    if (index > -1 && index !== this.currentIndex) {
+                        this.currentIndex = index;
+                        this.forceUpdate();
+                    }
+                    break;
+                }
+            }
         }
     };
 

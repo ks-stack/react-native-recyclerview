@@ -28,8 +28,8 @@ export default class ItemManager extends React.PureComponent<Props> {
         // contentOffset < 50防止上滑道顶部时不预渲染
         if (isForward || contentOffset < 50) {
             for (let i = 0; i < itemOffsets.length; i++) {
-                if (itemOffsets[i] >= contentOffset - preOffset * 0.5) {
-                    if (itemOffsets[i] <= contentOffset + containerSizeMain + preOffset * 1.5) {
+                if (itemOffsets[i] >= contentOffset - preOffset * 0.2) {
+                    if (itemOffsets[i] <= contentOffset + containerSizeMain + preOffset * 0.8) {
                         arr.push(i);
                     } else {
                         arr.push(i);
@@ -39,8 +39,8 @@ export default class ItemManager extends React.PureComponent<Props> {
             }
         } else {
             for (let i = 0; i < itemOffsets.length; i++) {
-                if (itemOffsets[i] >= contentOffset - preOffset * 1.5) {
-                    if (itemOffsets[i] <= contentOffset + containerSizeMain + preOffset * 0.5) {
+                if (itemOffsets[i] >= contentOffset - preOffset * 0.8) {
+                    if (itemOffsets[i] <= contentOffset + containerSizeMain + preOffset * 0.2) {
                         arr.push(i);
                     } else {
                         arr.push(i);

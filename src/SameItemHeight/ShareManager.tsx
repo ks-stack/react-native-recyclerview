@@ -13,6 +13,7 @@ interface Props {
     containerSize: { height: number; width: number };
     containerSizeMain: number;
     heightForItem: number;
+    preOffset: number;
 }
 
 export default class ShareManager extends React.PureComponent<Props> {
@@ -45,6 +46,7 @@ export default class ShareManager extends React.PureComponent<Props> {
             containerSize,
             containerSizeMain,
             heightForItem,
+            preOffset,
         } = this.props;
         return shareGroup.map((indexes, index) => {
             let transform: any;
@@ -68,6 +70,9 @@ export default class ShareManager extends React.PureComponent<Props> {
                         containerSize={containerSize}
                         containerSizeMain={containerSizeMain}
                         heightForItem={heightForItem}
+                        preOffset={preOffset}
+                        input={inputs[index]}
+                        output={outputs[index]}
                     />
                 </Animated.View>
             );

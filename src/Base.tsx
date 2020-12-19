@@ -137,17 +137,31 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
             renderForHeader,
             heightForFooter,
             renderForFooter,
+            heightForHeader,
         } = this.props;
         const { height, width } = this.containerSize;
 
         const { sumHeight } = this.getPosition();
 
         const EmptyComponent = typeof ListEmptyComponent === 'function' ? ListEmptyComponent() : ListEmptyComponent;
+
+        // header
+        let HeaderComponent = renderForHeader?.();
+        if (HeaderComponent && heightForHeader) {
+            HeaderComponent = React.cloneElement(HeaderComponent, {
+                style: [
+                    horizontal ? { height, width: heightForHeader } : { width, height: heightForHeader },
+                    HeaderComponent.props.style,
+                ],
+            });
+        }
+
+        // footer
         let FooterComponent = renderForFooter?.();
         if (FooterComponent && heightForFooter) {
             FooterComponent = React.cloneElement(FooterComponent, {
                 style: [
-                    styles.footer,
+                    { position: 'absolute' },
                     sumHeight > this.containerSizeMain
                         ? { [horizontal ? 'right' : 'bottom']: 0 }
                         : { [horizontal ? 'left' : 'top']: sumHeight - heightForFooter },
@@ -156,6 +170,7 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
                 ],
             });
         }
+
         const contentStyle = horizontal
             ? { width: Math.max(sumHeight, width), height }
             : { height: Math.max(sumHeight, height), width };
@@ -169,16 +184,10 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
                 contentContainerStyle={contentStyle}
             >
                 {countForItem < 1 && EmptyComponent}
-                {renderForHeader?.()}
+                {HeaderComponent}
                 {this.renderMain()}
                 {FooterComponent}
             </AnimatedScrollView>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    footer: {
-        position: 'absolute',
-    },
-});

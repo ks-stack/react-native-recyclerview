@@ -99,7 +99,7 @@ export default class SameItemHeight extends Base {
     };
 
     renderMain = () => {
-        const { renderForItem, horizontal, heightForItem } = this.props;
+        const { renderForItem, horizontal, heightForItem, preOffset } = this.props;
         return (
             <ShareManager
                 shareGroup={this.shareGroup}
@@ -112,6 +112,7 @@ export default class SameItemHeight extends Base {
                 containerSize={this.containerSize}
                 containerSizeMain={this.containerSizeMain}
                 heightForItem={heightForItem as number}
+                preOffset={preOffset}
             />
         );
     };
