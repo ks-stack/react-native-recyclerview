@@ -30,7 +30,7 @@ Prop name              | Description   | Type      | Default value | Required
 # Methods
 
 Method name            | Description
------------------------| 同`ScrollView`
+-----------------------|---------------
 `scrollTo`             | 同`ScrollView`
 `scrollToEnd`          | 同`ScrollView`
 `flashScrollIndicators`| 同`ScrollView`
