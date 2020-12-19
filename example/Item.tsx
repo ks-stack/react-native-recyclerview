@@ -1,28 +1,23 @@
 import React from 'react';
 import Image from 'react-native-fast-image';
+import { View, Text } from 'react-native';
+import { ItemStyle } from '../src';
 
 interface Props {
     data: string;
-    size: { height: number; width: number };
+    style: ItemStyle;
+    index: number;
 }
 
 export default class Item extends React.PureComponent<Props> {
-    state = {
-        loaded: false,
-    };
-
-    onLoadEnd = () => {
-        this.setState({ loaded: true });
-    };
-
     render() {
-        const { data, size } = this.props;
-        const { loaded } = this.state;
+        const { data, style, index } = this.props;
         return (
-            <>
-                {/* {!loaded && <Image style={[size, { position: 'absolute' }]} source={require('./default.png')} />} */}
-                <Image style={[size]} onLoadEnd={this.onLoadEnd} source={{ uri: data }} />
-            </>
+            <View style={style}>
+                <Image style={{ height: style.height, width: style.width }} source={{ uri: data }} />
+                <Text style={{ position: 'absolute' }}>5555555555555</Text>
+                <Text style={{ position: 'absolute', fontSize: 40, color: 'red', fontWeight: 'bold' }}>{index}</Text>
+            </View>
         );
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@ks-stack/react-native-recyclerview",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": false,
   "main": "src",
   "files": [
@@ -15,7 +15,7 @@
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/runtime": "^7.6.2",
-    "@ks-stack/eslint-config-typescript": "^0.0.1",
+    "@ks-stack/eslint-config-typescript": "^0.0.5",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-native": "^0.63.37",

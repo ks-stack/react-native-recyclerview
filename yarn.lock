@@ -766,10 +766,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@ks-stack/eslint-config-typescript@^0.0.1":
-  version "0.0.1"
-  resolved "http://172.16.1.179:4873/@ks-stack%2feslint-config-typescript/-/eslint-config-typescript-0.0.1.tgz#c0d357f2e913dc66728dc592504dbc841a968e7f"
-  integrity sha1-wNNX8ukT3GZyjcWSUE28hBqWjn8=
+"@ks-stack/eslint-config-typescript@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.npm.taobao.org/@ks-stack/eslint-config-typescript/download/@ks-stack/eslint-config-typescript-0.0.5.tgz?cache=0&sync_timestamp=1608309261925&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40ks-stack%2Feslint-config-typescript%2Fdownload%2F%40ks-stack%2Feslint-config-typescript-0.0.5.tgz#c187336493c89f03c69844da405bd96aa437b0f9"
+  integrity sha1-wYczZJPInwPGmETaQFvZaqQ3sPk=
   dependencies:
     "@react-native-community/eslint-config" "^0.0.3"
     "@typescript-eslint/eslint-plugin" "^3.5.0"

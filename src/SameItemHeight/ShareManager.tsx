@@ -1,26 +1,18 @@
 import React from 'react';
 import { Animated, StyleSheet } from 'react-native';
-import Share, { RenderForItem } from './Share';
-
-export type ShareRefs = React.RefObject<Share>[];
-export * from './Share';
+import Share from './Share';
+import { RenderForItem } from '../type';
 
 interface Props {
-    shareGroup: number[][][];
+    shareGroup: number[][];
     inputs: number[][];
     outputs: number[][];
     renderForItem: RenderForItem;
-    itemHeightList: number[];
     offset: Animated.Value;
-    itemOffsets: number[];
-    debug?: boolean;
     horizontal?: boolean | null;
-    containerSize: {
-        height: number;
-        width: number;
-    };
+    containerSize: { height: number; width: number };
     containerSizeMain: number;
-    preOffset: number;
+    heightForItem: number;
 }
 
 export default class ShareManager extends React.PureComponent<Props> {
@@ -47,14 +39,12 @@ export default class ShareManager extends React.PureComponent<Props> {
             shareGroup,
             inputs,
             outputs,
-            itemHeightList,
             renderForItem,
             offset,
-            debug,
             horizontal,
             containerSize,
             containerSizeMain,
-            preOffset,
+            heightForItem,
         } = this.props;
         return shareGroup.map((indexes, index) => {
             let transform: any;
@@ -73,15 +63,11 @@ export default class ShareManager extends React.PureComponent<Props> {
                     <Share
                         indexes={indexes}
                         renderForItem={renderForItem}
-                        itemHeightList={itemHeightList}
-                        debug={debug}
                         ref={this.shareRefs[index]}
                         horizontal={horizontal}
                         containerSize={containerSize}
                         containerSizeMain={containerSizeMain}
-                        input={inputs[index]}
-                        output={outputs[index]}
-                        preOffset={preOffset}
+                        heightForItem={heightForItem}
                     />
                 </Animated.View>
             );
