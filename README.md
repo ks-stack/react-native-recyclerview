@@ -3,6 +3,11 @@
 
 一个纯`react-native`实现的滚动列表，借鉴于[react-native-largelist](https://github.com/bolan9999/react-native-largelist)和[recyclerlistview](https://github.com/Flipkart/recyclerlistview)，更少的预渲染数量，更流畅的滚动表现。底层使用`react-native`自带的`ScrollView`，没有原生依赖
 
+## Todo
+
+1. 瀑布流
+2. 刷新头
+
 ## Getting started
 
 `$ yarn add @ks-stack/react-native-recyclerview`
