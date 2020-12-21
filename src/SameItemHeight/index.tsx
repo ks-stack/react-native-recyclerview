@@ -44,7 +44,14 @@ export default class SameItemHeight extends Base {
     };
 
     getPosition = () => {
-        const { countForItem, heightForItem, heightForHeader = 0, heightForFooter = 0, preOffset } = this.props;
+        const {
+            countForItem,
+            heightForItem,
+            heightForHeader = 0,
+            heightForFooter = 0,
+            preOffset,
+            numColumns,
+        } = this.props;
         const inputs: number[][] = [];
         const outputs: number[][] = [];
         const shareGroup: number[][] = [];
@@ -53,6 +60,7 @@ export default class SameItemHeight extends Base {
             return { sumHeight };
         }
 
+        const columns = Math.ceil(countForItem / numColumns);
         const itemHeight = typeof heightForItem === 'number' ? heightForItem : 0;
         const shareCount = Math.floor((this.containerSizeMain + preOffset) / itemHeight) + 2;
         const lastOffset = [];
@@ -65,13 +73,13 @@ export default class SameItemHeight extends Base {
         }
 
         let currentShareIndex = 0;
-        for (let i = 0; i < countForItem; i++) {
+        for (let i = 0; i < columns; i++) {
             sumHeight += itemHeight;
             shareGroup[currentShareIndex].push(i);
 
             currentShareIndex += 1;
             currentShareIndex %= shareCount;
-            if (i === countForItem - 1) break;
+            if (i === columns - 1) break;
             if (inputs[currentShareIndex].length === 0) {
                 inputs[currentShareIndex].push(Number.MIN_SAFE_INTEGER);
             }
@@ -99,7 +107,7 @@ export default class SameItemHeight extends Base {
     };
 
     renderMain = () => {
-        const { renderForItem, horizontal, heightForItem, preOffset } = this.props;
+        const { renderForItem, horizontal, heightForItem, preOffset, numColumns, countForItem } = this.props;
         return (
             <ShareManager
                 shareGroup={this.shareGroup}
@@ -107,12 +115,14 @@ export default class SameItemHeight extends Base {
                 outputs={this.outputs}
                 ref={this.shareManagerRef}
                 renderForItem={renderForItem}
+                numColumns={numColumns}
                 offset={this.offset}
                 horizontal={horizontal}
                 containerSize={this.containerSize}
                 containerSizeMain={this.containerSizeMain}
                 heightForItem={heightForItem as number}
                 preOffset={preOffset}
+                countForItem={countForItem}
             />
         );
     };

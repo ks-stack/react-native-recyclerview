@@ -11,6 +11,8 @@ interface Props {
     preOffset: number;
     output: number[];
     input: number[];
+    numColumns: number;
+    countForItem: number;
 }
 
 export default class Share extends React.Component<Props> {
@@ -58,16 +60,49 @@ export default class Share extends React.Component<Props> {
     };
 
     render() {
-        const { renderForItem, horizontal, heightForItem, containerSize, indexes } = this.props;
+        const {
+            renderForItem,
+            horizontal,
+            heightForItem,
+            containerSize,
+            indexes,
+            numColumns,
+            countForItem,
+        } = this.props;
         const index = indexes[this.currentIndex];
-        if (index < 0) {
+        if (index < 0 || index === undefined) {
             return null;
         }
-        const style = horizontal
-            ? { width: heightForItem, height: containerSize.height }
-            : { height: heightForItem, width: containerSize.width };
+        if (numColumns === 1) {
+            const style = horizontal
+                ? { width: heightForItem, height: containerSize.height }
+                : { height: heightForItem, width: containerSize.width };
 
-        const cell = renderForItem(index, style);
-        return cell;
+            const cell = renderForItem(index, style);
+            return cell;
+        }
+        const sizeOne = (horizontal ? containerSize.height : containerSize.width) / numColumns;
+        const style = horizontal
+            ? { width: heightForItem, height: sizeOne }
+            : { height: heightForItem, width: sizeOne };
+        return (
+            <>
+                {Array(numColumns)
+                    .fill('')
+                    .map((v, i) => {
+                        const key = index * numColumns + i;
+                        if (key < countForItem) {
+                            const cell = renderForItem(key, {
+                                ...style,
+                                [horizontal ? 'top' : 'left']: sizeOne * i,
+                                position: 'absolute',
+                            });
+                            const dom = React.cloneElement(cell, { key });
+                            return dom;
+                        }
+                        return null;
+                    })}
+            </>
+        );
     }
 }

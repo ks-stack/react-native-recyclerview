@@ -6,6 +6,7 @@ export type RenderForItem = (index: number, style: ItemStyle) => React.ReactElem
 
 export interface ListViewProps extends ScrollViewProps {
     countForItem: number;
+    numColumns?: number;
 
     renderForItem: RenderForItem;
     renderForHeader?: () => React.ReactElement | null;

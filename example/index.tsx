@@ -49,6 +49,7 @@ export default class App extends React.Component<Props> {
                     heightForFooter={100}
                     renderForFooter={this.renderForFooter}
                     countForItem={images.length}
+                    numColumns={2}
                     // preOffset={200}
                     style={styles.style}
                     onEndReachedThreshold={1}

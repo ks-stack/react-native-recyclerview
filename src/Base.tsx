@@ -14,7 +14,9 @@ const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
 export interface BaseProps extends ListViewProps {
     preOffset: number;
+    numColumns: number;
 }
+
 export default abstract class Base extends React.PureComponent<BaseProps> {
     abstract onHorizontalChange: () => void;
 
@@ -59,7 +61,7 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
     }
 
     componentDidUpdate(oldProps: BaseProps) {
-        const { countForItem, horizontal, onEndReached, heightForItem } = this.props;
+        const { countForItem, horizontal, onEndReached, heightForItem, numColumns = 1 } = this.props;
         if (!this.containerSizeMain) {
             return;
         }
@@ -72,7 +74,7 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
         }
         if (onEndReached && countForItem > 0 && this.onLoadedOffset <= this.containerSizeMain) {
             this.onEndReached(
-                Array(countForItem)
+                Array(Math.ceil(countForItem / numColumns))
                     .fill('')
                     .reduce((sum, v, i) => sum + getItemHeight(heightForItem, i), 0),
             );
