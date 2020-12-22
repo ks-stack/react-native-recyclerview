@@ -5,7 +5,8 @@
   "main": "output/index.js",
   "types": "output/index.d.ts",
   "files": [
-    "src"
+    "src",
+    "output"
   ],
   "scripts": {
     "android": "react-native run-android",
