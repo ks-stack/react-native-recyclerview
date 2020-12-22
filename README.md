@@ -7,6 +7,7 @@
 
 1. 瀑布流
 2. 刷新头
+3. 粘性item
 
 ## Getting started
 
