@@ -3,6 +3,12 @@
 
 一个纯`react-native`实现的滚动列表，借鉴于[react-native-largelist](https://github.com/bolan9999/react-native-largelist)和[recyclerlistview](https://github.com/Flipkart/recyclerlistview)，更少的预渲染数量，更流畅的滚动表现。底层使用`react-native`自带的`ScrollView`，没有原生依赖
 
+## Demerits
+必须提前传入列表元素的高度(横向滚动时为宽度)
+
+1. 刷新头
+2. 粘性item
+
 ## Todo
 
 1. 刷新头
@@ -21,7 +27,7 @@ Prop name              | Description   | Type      | Default value | Required
 -----------------------|---------------|-----------|---------------|---------
 `countForItem`         | 列表元素的总数量 | number | none | true
 `renderForItem`        | 列表元素的渲染方法 | funtion | none | true
-`heightForItem`        | 列表元素的高度，传入数值时采用`react-native-largelist`的模式，传入方法时采用`recyclerlistview`的模式 | funtion \| number | none | true
+`heightForItem`        | 列表元素的高度(横向滚动时为宽度)，传入数值时采用`react-native-largelist`的模式，传入方法时采用`recyclerlistview`的模式 | funtion \| number | none | true
 `numColumns`           | 同[FlatList](https://reactnative.cn/docs/flatlist#numcolumns) | number | 1 | false
 `renderForHeader`      | 列表头部的渲染方法，注意头部不会复用，会一直存在 | funtion | none | false
 `heightForHeader`      | 列表头部的高度 | number | none | false
