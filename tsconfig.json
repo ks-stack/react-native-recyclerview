@@ -1,25 +1,29 @@
 {
     "compilerOptions": {
-        "experimentalDecorators": true,
-        "allowJs": true,
-        "module": "commonjs",
+        "jsx": "react",
+        "module": "es2015",
+        "moduleResolution": "node",
+        "target": "ES2015",
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
-        "isolatedModules": true,
-        "jsx": "react",
-        "lib": ["ES2019"],
-        "moduleResolution": "node",
-        "strict": true,
-        "target": "esnext",
-        "baseUrl": "./",
         "resolveJsonModule": true,
-        "paths": {
-        },
+        "sourceMap": false,
+        "removeComments": true,
+        "strict": true,
+        "alwaysStrict": true,
+        "outDir": "output",
         "rootDir": "./",
-        "outDir": "output"
+        "noUnusedLocals": true,
+        "declaration": true,
+        "allowJs": true,
+        "experimentalDecorators": true
     },
     "exclude": [
-        "output",
         "node_modules",
+        "output"
+    ],
+    "include": [
+        "./*",
+        "./**/*"
     ]
 }
