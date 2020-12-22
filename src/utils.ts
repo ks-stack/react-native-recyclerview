@@ -5,26 +5,6 @@ export function getItemHeight(heightForItem: ((index: number) => number) | numbe
     return heightForItem(index);
 }
 
-export function findRangeIndex(itemOffsets: number[], contentOffset: number, containerSizeMain: number) {
-    let firstIndex = -1;
-    let lastIndex = -1;
-    for (let i = 0; i < itemOffsets.length; i++) {
-        if (itemOffsets[i] > contentOffset && firstIndex < 0) {
-            firstIndex = i;
-        }
-        if (firstIndex > -1) {
-            if (itemOffsets[i] > contentOffset + containerSizeMain) {
-                lastIndex = i;
-                break;
-            }
-        }
-    }
-    if (lastIndex === -1) {
-        lastIndex = itemOffsets.length - 1;
-    }
-    return { firstIndex, lastIndex };
-}
-
 // export function getItemHeight(heightForItem: (index: number) => number, countForItem: number, height: number) {
 //     if (typeof height !== 'number') {
 //         return { itemHeightList: [], fullScreenNeedCountList: [] };

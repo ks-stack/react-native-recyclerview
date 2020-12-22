@@ -60,7 +60,7 @@ export default class SameItemHeight extends Base {
             return { sumHeight };
         }
 
-        const columns = Math.ceil(countForItem / numColumns);
+        const itemCount = Math.ceil(countForItem / numColumns);
         const itemHeight = typeof heightForItem === 'number' ? heightForItem : 0;
         const shareCount = Math.floor((this.containerSizeMain + preOffset) / itemHeight) + 2;
         const lastOffset = [];
@@ -73,13 +73,13 @@ export default class SameItemHeight extends Base {
         }
 
         let currentShareIndex = 0;
-        for (let i = 0; i < columns; i++) {
+        for (let i = 0; i < itemCount; i++) {
             sumHeight += itemHeight;
             shareGroup[currentShareIndex].push(i);
 
             currentShareIndex += 1;
             currentShareIndex %= shareCount;
-            if (i === columns - 1) break;
+            if (i === itemCount - 1) break;
             if (inputs[currentShareIndex].length === 0) {
                 inputs[currentShareIndex].push(Number.MIN_SAFE_INTEGER);
             }

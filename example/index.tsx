@@ -42,8 +42,8 @@ export default class App extends React.Component<Props> {
                 <View style={styles.top} />
                 <ListView
                     renderForItem={this.renderForItem}
-                    // heightForItem={this.heightForItem}
-                    heightForItem={150}
+                    heightForItem={this.heightForItem}
+                    // heightForItem={150}
                     heightForHeader={100}
                     renderForHeader={this.renderForHeader}
                     heightForFooter={100}

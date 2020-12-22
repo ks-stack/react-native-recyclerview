@@ -15,6 +15,7 @@ const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 export interface BaseProps extends ListViewProps {
     preOffset: number;
     numColumns: number;
+    horizontal: boolean;
 }
 
 export default abstract class Base extends React.PureComponent<BaseProps> {

@@ -8,10 +8,11 @@ import SameItemHeight from './SameItemHeight';
 export * from './type';
 
 export default (props: ListViewProps) => {
-    const preOffset = props.preOffset !== undefined ? props.preOffset : Platform.OS === 'ios' ? 100 : 800;
+    const preOffset = props.preOffset !== undefined ? props.preOffset : Platform.OS === 'ios' ? 200 : 800;
     const numColumns = props.numColumns === undefined ? 1 : props.numColumns;
+    const horizontal = !!props.horizontal;
     if (typeof props.heightForItem === 'number') {
-        return <SameItemHeight {...props} preOffset={preOffset} numColumns={numColumns} />;
+        return <SameItemHeight {...props} preOffset={preOffset} numColumns={numColumns} horizontal={horizontal} />;
     }
-    return <DiffItemHeight {...props} preOffset={preOffset} numColumns={numColumns} />;
+    return <DiffItemHeight {...props} preOffset={preOffset} numColumns={numColumns} horizontal={horizontal} />;
 };

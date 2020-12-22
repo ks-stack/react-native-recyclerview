@@ -1,20 +1,25 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-unreachable */
 import React from 'react';
-import { Platform } from 'react-native';
 import { RenderForItem } from '../type';
 
 interface Props {
     renderForItem: RenderForItem;
     itemHeightList: number[];
-    itemOffsets: number[];
+    itemOffsets: { top: number; left: number }[];
     horizontal?: boolean | null;
     containerSize: { height: number; width: number };
     containerSizeMain: number;
     preOffset: number;
+    numColumns: number;
 }
 
 function isDiffArr(arr1: number[], arr2: number[]) {
-    if (arr1[0] !== arr2[0] || arr1[arr1.length - 1] !== arr2[arr2.length - 1]) {
-        return true;
+    const arr = arr1.length > arr2.length ? arr1 : arr2;
+    for (const i in arr) {
+        if (arr1[i] !== arr2[i]) {
+            return true;
+        }
     }
     return false;
 }
@@ -23,27 +28,29 @@ export default class ItemManager extends React.PureComponent<Props> {
     list: number[] = [];
 
     update = (contentOffset: number, isForward?: boolean) => {
-        const { itemOffsets, containerSizeMain, preOffset } = this.props;
+        const { itemOffsets, containerSizeMain, preOffset, horizontal, itemHeightList } = this.props;
         const arr = [];
         // contentOffset < 50防止上滑道顶部时不预渲染
         if (isForward || contentOffset < 50) {
             for (let i = 0; i < itemOffsets.length; i++) {
-                if (itemOffsets[i] >= contentOffset - preOffset * 0.2) {
-                    if (itemOffsets[i] <= contentOffset + containerSizeMain + preOffset * 0.8) {
+                const { left, top } = itemOffsets[i];
+                const offset = horizontal ? left : top;
+                if (offset >= contentOffset - preOffset * 0.2) {
+                    if (offset - itemHeightList[i] <= contentOffset + containerSizeMain + preOffset * 0.8) {
                         arr.push(i);
                     } else {
-                        arr.push(i);
                         break;
                     }
                 }
             }
         } else {
             for (let i = 0; i < itemOffsets.length; i++) {
-                if (itemOffsets[i] >= contentOffset - preOffset * 0.8) {
-                    if (itemOffsets[i] <= contentOffset + containerSizeMain + preOffset * 0.2) {
+                const { left, top } = itemOffsets[i];
+                const offset = horizontal ? left : top;
+                if (offset >= contentOffset - preOffset * 0.8) {
+                    if (offset - itemHeightList[i] <= contentOffset + containerSizeMain + preOffset * 0.2) {
                         arr.push(i);
                     } else {
-                        arr.push(i);
                         break;
                     }
                 }
@@ -57,15 +64,17 @@ export default class ItemManager extends React.PureComponent<Props> {
     };
 
     render() {
-        const { renderForItem, itemHeightList, horizontal, containerSize, itemOffsets } = this.props;
-        return this.list.map((index, i) => {
+        const { renderForItem, itemHeightList, horizontal, containerSize, itemOffsets, numColumns } = this.props;
+        return this.list.map((index) => {
             const { height, width } = containerSize;
-            const offset = itemOffsets[index] - itemHeightList[index];
+            const { left, top } = itemOffsets[index];
+            const offset = (horizontal ? left : top) - itemHeightList[index];
+            const sizeOne = (horizontal ? height : width) / numColumns;
             const style = horizontal
-                ? { position: 'absolute' as 'absolute', width: itemHeightList[index], height, left: offset }
-                : { position: 'absolute' as 'absolute', height: itemHeightList[index], width, top: offset };
-            const cell = renderForItem(index, style);
-            const dom = React.cloneElement(cell, { key: Platform.OS === 'ios' ? i : index });
+                ? { width: itemHeightList[index], height: sizeOne, left: offset, top }
+                : { height: itemHeightList[index], width: sizeOne, top: offset, left };
+            const cell = renderForItem(index, { ...style, position: 'absolute' as 'absolute' });
+            const dom = React.cloneElement(cell, { key: index });
             return dom;
         });
     }
