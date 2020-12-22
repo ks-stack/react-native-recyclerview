@@ -22,16 +22,16 @@ Prop name              | Description   | Type      | Default value | Required
 `countForItem`         | 列表元素的总数量 | number | none | true
 `renderForItem`        | 列表元素的渲染方法 | funtion | none | true
 `heightForItem`        | 列表元素的高度，传入数值时采用`react-native-largelist`的模式，传入方法时采用`recyclerlistview`的模式 | funtion \| number | none | true
-`numColumns`           | 同`FlatList` | number | 1 | false
+`numColumns`           | 同[FlatList](https://reactnative.cn/docs/flatlist#numcolumns) | number | 1 | false
 `renderForHeader`      | 列表头部的渲染方法，注意头部不会复用，会一直存在 | funtion | none | false
 `heightForHeader`      | 列表头部的高度 | number | none | false
 `renderForFooter`      | 列表尾部的渲染方法，注意尾部不会复用，会一直存在 | funtion | none | false
 `heightForFooter`      | 列表尾部的高度 | number | none | false
 `ListEmptyComponent`   | 列表为空时渲染的组件 | funtion \| component | none | false
 `preOffset`            | 预渲染的偏移量，增大该数值可减少图片渲染慢的白屏几率 | number | ios200，安卓800，因为glide渲染图片实在太慢了 | false
-`onEndReachedThreshold`| 同`FlatList` | number | 1 | false
-`onEndReached`         | 同`FlatList` | funtion | none | false
-`onVisibleItemsChange` | 同`FlatList` | funtion | none | false
+`onEndReachedThreshold`| 同[FlatList](https://reactnative.cn/docs/flatlist#onendreachedthreshold) | number | 1 | false
+`onEndReached`         | 同[FlatList](https://reactnative.cn/docs/flatlist#onendreached) | funtion | none | false
+`onVisibleItemsChange` | 同[FlatList](https://reactnative.cn/docs/flatlist#onviewableitemschanged) | funtion | none | false
 
 # Methods
 
