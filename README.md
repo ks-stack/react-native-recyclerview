@@ -19,7 +19,7 @@
 参考[example](https://github.com/ks-stack/react-native-recyclerview/tree/main/example)文件夹
 
 # Props
-理论上兼容除`contentContainerStyle`的全部`ScrollView`的属性，以下为新增属性
+理论上兼容除[contentContainerStyle](https://reactnative.cn/docs/scrollview#contentcontainerstyle)的全部[ScrollView](https://reactnative.cn/docs/scrollview)的属性，以下为新增属性
 Prop name              | Description   | Type      | Default value | Required
 -----------------------|---------------|-----------|---------------|---------
 `countForItem`         | 列表元素的总数量 | number | none | true
@@ -40,9 +40,9 @@ Prop name              | Description   | Type      | Default value | Required
 
 Method name            | Description
 -----------------------|---------------
-`scrollTo`             | 同`ScrollView`
-`scrollToEnd`          | 同`ScrollView`
-`flashScrollIndicators`| 同`ScrollView`
+`scrollTo`             | 同[ScrollView](https://reactnative.cn/docs/scrollview#scrollto)
+`scrollToEnd`          | 同[ScrollView](https://reactnative.cn/docs/scrollview#scrolltoend)
+`flashScrollIndicators`| 同[ScrollView](https://reactnative.cn/docs/scrollview#flashscrollindicators)
 
 ## Run the example app
 
