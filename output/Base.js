@@ -19,7 +19,7 @@ export default class Base extends React.PureComponent {
             if (this.onLoadedOffset <= this.containerSizeMain ||
                 (distanceFromEnd <= onEndReachedThreshold * this.containerSizeMain && contentHeight > this.onLoadedOffset)) {
                 this.onLoadedOffset = contentHeight;
-                onEndReached === null || onEndReached === void 0 ? void 0 : onEndReached(distanceFromEnd);
+                onEndReached?.(distanceFromEnd);
             }
         };
         this.onScroll = (e) => {
@@ -28,7 +28,7 @@ export default class Base extends React.PureComponent {
             const isForward = nextContentOffset > this.contentOffset;
             this.contentOffset = nextContentOffset;
             this.onContentOffsetChange(isForward);
-            onScroll === null || onScroll === void 0 ? void 0 : onScroll(e);
+            onScroll?.(e);
             if (onEndReached) {
                 this.onEndReached(horizontal ? e.nativeEvent.contentSize.width : e.nativeEvent.contentSize.height);
             }
@@ -41,19 +41,16 @@ export default class Base extends React.PureComponent {
                 this.containerSizeMain = horizontal ? width : height;
                 this.forceUpdate();
             }
-            onLayout === null || onLayout === void 0 ? void 0 : onLayout(e);
+            onLayout?.(e);
         };
         this.scrollTo = (option) => {
-            var _a;
-            (_a = this.ref.current) === null || _a === void 0 ? void 0 : _a._component.scrollTo(option);
+            this.ref.current?._component.scrollTo(option);
         };
         this.scrollToEnd = (option) => {
-            var _a;
-            (_a = this.ref.current) === null || _a === void 0 ? void 0 : _a._component.scrollToEnd(option);
+            this.ref.current?._component.scrollToEnd(option);
         };
         this.flashScrollIndicators = () => {
-            var _a;
-            (_a = this.ref.current) === null || _a === void 0 ? void 0 : _a._component.flashScrollIndicators();
+            this.ref.current?._component.flashScrollIndicators();
         };
         const { style, horizontal } = props;
         const { height, width } = StyleSheet.flatten(style);
@@ -89,7 +86,7 @@ export default class Base extends React.PureComponent {
         const { height, width } = this.containerSize;
         const { sumHeight } = this.getPosition();
         const EmptyComponent = typeof ListEmptyComponent === 'function' ? ListEmptyComponent() : ListEmptyComponent;
-        let HeaderComponent = renderForHeader === null || renderForHeader === void 0 ? void 0 : renderForHeader();
+        let HeaderComponent = renderForHeader?.();
         if (HeaderComponent && heightForHeader) {
             HeaderComponent = React.cloneElement(HeaderComponent, {
                 style: [
@@ -98,7 +95,7 @@ export default class Base extends React.PureComponent {
                 ],
             });
         }
-        let FooterComponent = renderForFooter === null || renderForFooter === void 0 ? void 0 : renderForFooter();
+        let FooterComponent = renderForFooter?.();
         if (FooterComponent && heightForFooter) {
             FooterComponent = React.cloneElement(FooterComponent, {
                 style: [

@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         "jsx": "react",
-        "module": "es2015",
+        "module": "ES2020",
         "moduleResolution": "node",
-        "target": "ES2015",
+        "target": "ES2020",
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "resolveJsonModule": true,
@@ -12,7 +12,7 @@
         "strict": true,
         "alwaysStrict": true,
         "outDir": "output",
-        "rootDir": "./",
+        "rootDir": "./src",
         "noUnusedLocals": true,
         "declaration": true,
         "allowJs": true,
@@ -23,7 +23,6 @@
         "output"
     ],
     "include": [
-        "./*",
-        "./**/*"
+        "./src"
     ]
 }

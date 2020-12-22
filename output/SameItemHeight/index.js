@@ -17,9 +17,8 @@ export default class SameItemHeight extends Base {
             this.onScrollEvent = Animated.event(event, { useNativeDriver: true, listener: this.onScroll });
         };
         this.onContentOffsetChange = (isForward) => {
-            var _a;
             const { onVisibleItemsChange, heightForItem } = this.props;
-            (_a = this.shareManagerRef.current) === null || _a === void 0 ? void 0 : _a.update(this.contentOffset, isForward);
+            this.shareManagerRef.current?.update(this.contentOffset, isForward);
             if (onVisibleItemsChange) {
                 const firstIndex = Math.floor(this.contentOffset / heightForItem);
                 const lastIndex = Math.ceil((this.contentOffset + this.containerSizeMain) / heightForItem);
@@ -27,7 +26,7 @@ export default class SameItemHeight extends Base {
                     this.firstOnVisibleItemsChange = false;
                     this.firstItemIndex = firstIndex;
                     this.lastItemIndex = lastIndex;
-                    onVisibleItemsChange === null || onVisibleItemsChange === void 0 ? void 0 : onVisibleItemsChange(this.firstItemIndex, this.lastItemIndex);
+                    onVisibleItemsChange?.(this.firstItemIndex, this.lastItemIndex);
                 }
             }
         };

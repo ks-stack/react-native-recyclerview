@@ -6,7 +6,7 @@ export default class ShareManager extends React.PureComponent {
         super(props);
         this.shareRefs = [];
         this.update = (contentOffset, isForward) => {
-            this.shareRefs.forEach((v) => { var _a; return (_a = v.current) === null || _a === void 0 ? void 0 : _a.update(contentOffset, isForward); });
+            this.shareRefs.forEach((v) => v.current?.update(contentOffset, isForward));
         };
         const { shareGroup } = this.props;
         this.shareRefs = shareGroup.map(() => React.createRef());

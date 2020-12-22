@@ -30,16 +30,15 @@ export default class DiffItemHeight extends Base {
         this.shareManagerRef = React.createRef();
         this.onHorizontalChange = () => { };
         this.onContentOffsetChange = (isForward) => {
-            var _a;
             const { onVisibleItemsChange, horizontal } = this.props;
-            (_a = this.shareManagerRef.current) === null || _a === void 0 ? void 0 : _a.update(this.contentOffset, isForward);
+            this.shareManagerRef.current?.update(this.contentOffset, isForward);
             if (onVisibleItemsChange) {
                 const { firstIndex, lastIndex } = findRangeIndex(this.itemOffsets, this.contentOffset, this.containerSizeMain, horizontal);
                 if (this.firstItemIndex !== firstIndex || this.lastItemIndex !== lastIndex) {
                     this.firstOnVisibleItemsChange = false;
                     this.firstItemIndex = firstIndex;
                     this.lastItemIndex = lastIndex;
-                    onVisibleItemsChange === null || onVisibleItemsChange === void 0 ? void 0 : onVisibleItemsChange(this.firstItemIndex, this.lastItemIndex);
+                    onVisibleItemsChange?.(this.firstItemIndex, this.lastItemIndex);
                 }
             }
         };

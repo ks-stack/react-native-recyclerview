@@ -59,7 +59,7 @@ export default class ItemManager extends React.PureComponent {
             const style = horizontal
                 ? { width: itemHeightList[index], height: sizeOne, left: offset, top }
                 : { height: itemHeightList[index], width: sizeOne, top: offset, left };
-            const cell = renderForItem(index, Object.assign(Object.assign({}, style), { position: 'absolute' }));
+            const cell = renderForItem(index, { ...style, position: 'absolute' });
             const dom = React.cloneElement(cell, { key: index });
             return dom;
         });

@@ -60,7 +60,11 @@ export default class Share extends React.Component {
             .map((v, i) => {
             const key = index * numColumns + i;
             if (key < countForItem) {
-                const cell = renderForItem(key, Object.assign(Object.assign({}, style), { [horizontal ? 'top' : 'left']: sizeOne * i, position: 'absolute' }));
+                const cell = renderForItem(key, {
+                    ...style,
+                    [horizontal ? 'top' : 'left']: sizeOne * i,
+                    position: 'absolute',
+                });
                 const dom = React.cloneElement(cell, { key });
                 return dom;
             }
