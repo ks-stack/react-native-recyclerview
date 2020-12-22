@@ -1,7 +1,7 @@
 
 # react-native-recyclerview
 
-一个纯`react-native`实现的滚动列表，借鉴于[react-native-largelist](https://github.com/bolan9999/react-native-largelist)和[recyclerlistview](https://github.com/Flipkart/recyclerlistview)，更少的预渲染数量，更流畅的滚动表现。底层使用`react-native`自带的`ScrollView`，没有原生依赖
+一个纯`react-native`实现的滚动列表，借鉴于[react-native-largelist](https://github.com/bolan9999/react-native-largelist)和[recyclerlistview](https://github.com/Flipkart/recyclerlistview)，更少的预渲染数量，更流畅的滚动表现。底层使用`react-native`自带的`ScrollView`，没有额外原生依赖
 
 ## Demerits
 必须提前传入列表元素的高度(横向滚动时为宽度)
