@@ -1,5 +1,5 @@
 import React from 'react';
-import { RenderForItem } from '../type.d';
+import { RenderForItem } from '../type';
 
 interface Props {
     indexes: number[];

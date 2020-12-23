@@ -44,13 +44,13 @@ export default class Base extends React.PureComponent {
             onLayout?.(e);
         };
         this.scrollTo = (option) => {
-            this.ref.current?._component.scrollTo(option);
+            this.ref.current?.scrollTo(option);
         };
         this.scrollToEnd = (option) => {
-            this.ref.current?._component.scrollToEnd(option);
+            this.ref.current?.scrollToEnd(option);
         };
         this.flashScrollIndicators = () => {
-            this.ref.current?._component.flashScrollIndicators();
+            this.ref.current?.flashScrollIndicators();
         };
         const { style, horizontal } = props;
         const { height, width } = StyleSheet.flatten(style);

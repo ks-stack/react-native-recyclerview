@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import Share from './Share';
-import { RenderForItem } from '../type.d';
+import { RenderForItem } from '../type';
 
 interface Props {
     shareGroup: number[][];

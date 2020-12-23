@@ -1,11 +1,11 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 import { Platform } from 'react-native';
-import { ListViewProps } from './type.d';
+import { ListViewProps } from './type';
 import DiffItemHeight from './DiffItemHeight';
 import SameItemHeight from './SameItemHeight';
 
-export * from './type.d';
+export * from './type';
 
 export default class ListView extends React.PureComponent<ListViewProps> {
     private ref = React.createRef<SameItemHeight | DiffItemHeight>();

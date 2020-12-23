@@ -8,7 +8,7 @@ import {
     NativeSyntheticEvent,
 } from 'react-native';
 import { getItemHeight } from './utils';
-import { ListViewProps } from './type.d';
+import { ListViewProps } from './type';
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 

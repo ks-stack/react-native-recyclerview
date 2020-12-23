@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-unreachable */
 import React from 'react';
-import { RenderForItem } from '../type.d';
+import { RenderForItem } from '../type';
 
 interface Props {
     renderForItem: RenderForItem;
