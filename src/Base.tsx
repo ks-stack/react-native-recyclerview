@@ -8,7 +8,7 @@ import {
     NativeSyntheticEvent,
 } from 'react-native';
 import { getItemHeight } from './utils';
-import { ListViewProps } from './type';
+import { ListViewProps } from './type.d';
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
@@ -121,15 +121,15 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
     };
 
     scrollTo = (option?: { x?: number; y?: number; animated?: boolean; duration?: number }) => {
-        this.ref.current?._component.scrollTo(option);
+        this.ref.current?.scrollTo(option);
     };
 
     scrollToEnd = (option?: { animated?: boolean; duration?: number }) => {
-        this.ref.current?._component.scrollToEnd(option);
+        this.ref.current?.scrollToEnd(option);
     };
 
     flashScrollIndicators = () => {
-        this.ref.current?._component.flashScrollIndicators();
+        this.ref.current?.flashScrollIndicators();
     };
 
     render() {

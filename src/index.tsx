@@ -1,18 +1,38 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 import { Platform } from 'react-native';
-import { ListViewProps } from './type';
+import { ListViewProps } from './type.d';
 import DiffItemHeight from './DiffItemHeight';
 import SameItemHeight from './SameItemHeight';
 
-export * from './type';
+export * from './type.d';
 
-export default (props: ListViewProps) => {
-    const preOffset = props.preOffset !== undefined ? props.preOffset : Platform.OS === 'ios' ? 200 : 800;
-    const numColumns = props.numColumns === undefined ? 1 : props.numColumns;
-    const horizontal = !!props.horizontal;
-    if (typeof props.heightForItem === 'number') {
-        return <SameItemHeight {...props} preOffset={preOffset} numColumns={numColumns} horizontal={horizontal} />;
+export default class ListView extends React.PureComponent<ListViewProps> {
+    private ref = React.createRef<SameItemHeight | DiffItemHeight>();
+
+    scrollTo = (option?: { x?: number; y?: number; animated?: boolean; duration?: number }) => {
+        this.ref.current?.scrollTo(option);
+    };
+
+    scrollToEnd = (option?: { animated?: boolean; duration?: number }) => {
+        this.ref.current?.scrollToEnd(option);
+    };
+
+    flashScrollIndicators = () => {
+        this.ref.current?.flashScrollIndicators();
+    };
+
+    render() {
+        const { preOffset = Platform.OS === 'ios' ? 200 : 800, numColumns = 1, horizontal, heightForItem } = this.props;
+        const C = typeof heightForItem === 'number' ? SameItemHeight : DiffItemHeight;
+        return (
+            <C
+                {...this.props}
+                ref={this.ref}
+                preOffset={preOffset}
+                numColumns={numColumns}
+                horizontal={horizontal || false}
+            />
+        );
     }
-    return <DiffItemHeight {...props} preOffset={preOffset} numColumns={numColumns} horizontal={horizontal} />;
-};
+}
