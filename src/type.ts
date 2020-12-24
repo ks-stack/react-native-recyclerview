@@ -1,4 +1,4 @@
-import { ScrollViewProps } from 'react-native';
+import { ScrollViewProps, ViewStyle } from 'react-native';
 
 export type ItemStyle = { position?: 'absolute'; height: number; width: number; top?: number; left?: number };
 
@@ -12,6 +12,12 @@ export interface ListViewProps extends ScrollViewProps {
     renderForHeader?: () => React.ReactElement | null;
     renderForFooter?: () => React.ReactElement | null;
     ListEmptyComponent?: () => React.ReactElement | React.ReactElement | null;
+
+    // marginForItem?: (index: number) => { top?: number; left?: number; right?: number; bottom?: number };
+    /**
+     * heightForItem为number时生效
+     */
+    shareStyle?: ViewStyle;
 
     heightForItem: ((index: number) => number) | number;
     heightForHeader?: number;

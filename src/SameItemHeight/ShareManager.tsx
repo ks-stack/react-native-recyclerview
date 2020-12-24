@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import { Animated, StyleSheet, ViewStyle } from 'react-native';
 import Share from './Share';
 import { RenderForItem } from '../type';
 
@@ -16,6 +16,7 @@ interface Props {
     preOffset: number;
     numColumns: number;
     countForItem: number;
+    shareStyle?: ViewStyle;
 }
 
 export default class ShareManager extends React.PureComponent<Props> {
@@ -51,6 +52,7 @@ export default class ShareManager extends React.PureComponent<Props> {
             preOffset,
             numColumns,
             countForItem,
+            shareStyle,
         } = this.props;
         return shareGroup.map((indexes, index) => {
             let transform: any;
@@ -65,7 +67,14 @@ export default class ShareManager extends React.PureComponent<Props> {
                 ];
             }
             return (
-                <Animated.View key={index} style={[{ transform }, horizontal ? styles.horizontalAbs : styles.abs]}>
+                <Animated.View
+                    key={index}
+                    style={[
+                        { transform, [horizontal ? 'width' : 'height']: heightForItem },
+                        horizontal ? styles.horizontalAbs : styles.abs,
+                        shareStyle,
+                    ]}
+                >
                     <Share
                         indexes={indexes}
                         numColumns={numColumns}
@@ -99,6 +108,5 @@ const styles = StyleSheet.create({
         left: 0,
         top: 0,
         bottom: 0,
-        flexDirection: 'row',
     },
 });

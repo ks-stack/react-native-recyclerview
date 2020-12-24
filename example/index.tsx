@@ -18,6 +18,10 @@ export default class App extends React.Component<Props> {
         return 100 + (index % 50);
     };
 
+    marginForItem = (index: number) => {
+        return { right: 10 };
+    };
+
     renderForItem = (index: number, style: ItemStyle) => <Item index={index} style={style} data={images[index]} />;
 
     renderForHeader = () => {
@@ -42,19 +46,22 @@ export default class App extends React.Component<Props> {
                 <View style={styles.top} />
                 <ListView
                     renderForItem={this.renderForItem}
-                    heightForItem={this.heightForItem}
-                    // heightForItem={150}
+                    // heightForItem={this.heightForItem}
+                    heightForItem={150}
                     heightForHeader={100}
                     renderForHeader={this.renderForHeader}
                     heightForFooter={100}
                     renderForFooter={this.renderForFooter}
                     countForItem={images.length}
-                    numColumns={2}
+                    numColumns={3}
                     // preOffset={200}
                     contentContainerStyle={{ padding: 10 }}
                     style={styles.style}
                     onEndReachedThreshold={1}
                     onEndReached={this.onEndReached}
+                    shareStyle={{ justifyContent: 'space-between', alignItems: 'flex-end' }}
+                    // horizontal
+                    // marginForItem={this.marginForItem}
                 />
                 <View style={styles.top} />
                 <View style={[styles.absTop, styles.top]} />

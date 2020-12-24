@@ -107,9 +107,18 @@ export default class SameItemHeight extends Base {
     };
 
     renderMain = () => {
-        const { renderForItem, horizontal, heightForItem, preOffset, numColumns, countForItem } = this.props;
+        const {
+            renderForItem,
+            horizontal,
+            heightForItem,
+            preOffset,
+            numColumns,
+            countForItem,
+            shareStyle,
+        } = this.props;
         return (
             <ShareManager
+                shareStyle={shareStyle}
                 shareGroup={this.shareGroup}
                 inputs={this.inputs}
                 outputs={this.outputs}
