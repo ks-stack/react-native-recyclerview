@@ -33,7 +33,7 @@ export default class SameItemHeight extends Base {
         this.shareManagerRef.current?.update(this.contentOffset, isForward);
         if (onVisibleItemsChange) {
             const firstIndex = Math.floor(this.contentOffset / (heightForItem as number));
-            const lastIndex = Math.ceil((this.contentOffset + this.containerSizeMain) / (heightForItem as number));
+            const lastIndex = Math.ceil((this.contentOffset + this.containerSize) / (heightForItem as number));
             if (this.firstItemIndex !== firstIndex || this.lastItemIndex !== lastIndex) {
                 this.firstOnVisibleItemsChange = false;
                 this.firstItemIndex = firstIndex;
@@ -43,7 +43,7 @@ export default class SameItemHeight extends Base {
         }
     };
 
-    getPosition = () => {
+    getSumHeight = () => {
         const {
             countForItem,
             heightForItem,
@@ -56,13 +56,13 @@ export default class SameItemHeight extends Base {
         const outputs: number[][] = [];
         const shareGroup: number[][] = [];
         let sumHeight = heightForHeader;
-        if (!this.containerSizeMain) {
-            return { sumHeight };
+        if (!this.containerSize) {
+            return sumHeight;
         }
 
         const itemCount = Math.ceil(countForItem / numColumns);
         const itemHeight = typeof heightForItem === 'number' ? heightForItem : 0;
-        const shareCount = Math.floor((this.containerSizeMain + preOffset) / itemHeight) + 2;
+        const shareCount = Math.floor((this.containerSize + preOffset) / itemHeight) + 2;
         const lastOffset = [];
 
         for (let i = 0; i < shareCount; i++) {
@@ -83,9 +83,9 @@ export default class SameItemHeight extends Base {
             if (inputs[currentShareIndex].length === 0) {
                 inputs[currentShareIndex].push(Number.MIN_SAFE_INTEGER);
             }
-            // const input = sumHeight - containerSizeMain - shareMinHeight;
+            // const input = sumHeight - containerSize - shareMinHeight;
             // 位置是原生动画，不需要提前移动
-            const input = sumHeight - this.containerSizeMain;
+            const input = sumHeight - this.containerSize;
             inputs[currentShareIndex].push(input);
             inputs[currentShareIndex].push(input);
             if (outputs[currentShareIndex].length === 0) {
@@ -103,7 +103,7 @@ export default class SameItemHeight extends Base {
         this.shareGroup = shareGroup;
         this.inputs = inputs;
         this.outputs = outputs;
-        return { sumHeight };
+        return sumHeight;
     };
 
     renderMain = () => {
@@ -118,8 +118,8 @@ export default class SameItemHeight extends Base {
                 numColumns={numColumns}
                 offset={this.offset}
                 horizontal={horizontal}
+                contentSize={this.contentSize}
                 containerSize={this.containerSize}
-                containerSizeMain={this.containerSizeMain}
                 heightForItem={heightForItem as number}
                 preOffset={preOffset}
                 countForItem={countForItem}

@@ -15,7 +15,7 @@ export default class App extends React.Component<Props> {
     onEndReached = () => {};
 
     heightForItem = (index: number) => {
-        return 125 + Math.random() * 50;
+        return 100 + (index % 50);
     };
 
     renderForItem = (index: number, style: ItemStyle) => <Item index={index} style={style} data={images[index]} />;
@@ -51,6 +51,7 @@ export default class App extends React.Component<Props> {
                     countForItem={images.length}
                     numColumns={2}
                     // preOffset={200}
+                    contentContainerStyle={{ padding: 10 }}
                     style={styles.style}
                     onEndReachedThreshold={1}
                     onEndReached={this.onEndReached}

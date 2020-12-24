@@ -8,8 +8,8 @@ interface Props {
     itemHeightList: number[];
     itemOffsets: { top: number; left: number }[];
     horizontal?: boolean | null;
-    containerSize: { height: number; width: number };
-    containerSizeMain: number;
+    contentSize: { height: number; width: number };
+    containerSize: number;
     preOffset: number;
     numColumns: number;
 }
@@ -28,7 +28,7 @@ export default class ItemManager extends React.PureComponent<Props> {
     list: number[] = [];
 
     update = (contentOffset: number, isForward?: boolean) => {
-        const { itemOffsets, containerSizeMain, preOffset, horizontal, itemHeightList } = this.props;
+        const { itemOffsets, containerSize, preOffset, horizontal, itemHeightList } = this.props;
         const arr = [];
         // contentOffset < 50防止上滑道顶部时不预渲染
         if (isForward || contentOffset < 50) {
@@ -36,7 +36,7 @@ export default class ItemManager extends React.PureComponent<Props> {
                 const { left, top } = itemOffsets[i];
                 const offset = horizontal ? left : top;
                 if (offset >= contentOffset - preOffset * 0.2) {
-                    if (offset - itemHeightList[i] <= contentOffset + containerSizeMain + preOffset * 0.8) {
+                    if (offset - itemHeightList[i] <= contentOffset + containerSize + preOffset * 0.8) {
                         arr.push(i);
                     } else {
                         break;
@@ -48,7 +48,7 @@ export default class ItemManager extends React.PureComponent<Props> {
                 const { left, top } = itemOffsets[i];
                 const offset = horizontal ? left : top;
                 if (offset >= contentOffset - preOffset * 0.8) {
-                    if (offset - itemHeightList[i] <= contentOffset + containerSizeMain + preOffset * 0.2) {
+                    if (offset - itemHeightList[i] <= contentOffset + containerSize + preOffset * 0.2) {
                         arr.push(i);
                     } else {
                         break;
@@ -64,9 +64,9 @@ export default class ItemManager extends React.PureComponent<Props> {
     };
 
     render() {
-        const { renderForItem, itemHeightList, horizontal, containerSize, itemOffsets, numColumns } = this.props;
+        const { renderForItem, itemHeightList, horizontal, contentSize, itemOffsets, numColumns } = this.props;
         return this.list.map((index) => {
-            const { height, width } = containerSize;
+            const { height, width } = contentSize;
             const { left, top } = itemOffsets[index];
             const offset = (horizontal ? left : top) - itemHeightList[index];
             const sizeOne = (horizontal ? height : width) / numColumns;

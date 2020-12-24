@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-    Animated,
-    StyleSheet,
-    LayoutChangeEvent,
-    ScrollView,
-    NativeScrollEvent,
-    NativeSyntheticEvent,
-} from 'react-native';
+import { Animated, LayoutChangeEvent, ScrollView, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native';
 import { getItemHeight } from './utils';
 import { ListViewProps } from './type';
 
@@ -23,12 +16,7 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
 
     abstract renderMain: () => void;
 
-    abstract getPosition: () => {
-        sumHeight: number;
-        inputs?: number[][];
-        outputs?: number[][];
-        shareGroup?: number[][];
-    };
+    abstract getSumHeight: () => number;
 
     abstract onContentOffsetChange: (isForward: boolean) => void;
 
@@ -36,9 +24,9 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
 
     public contentOffset: number = 0;
 
-    public containerSize = { height: 0, width: 0 };
+    public contentSize = { height: 0, width: 0 };
 
-    public containerSizeMain = 0;
+    public containerSize = 0;
 
     public firstItemIndex: number = -1;
 
@@ -50,20 +38,9 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
 
     private onLoadedOffset: number = 0;
 
-    constructor(props: BaseProps) {
-        super(props);
-        const { style, horizontal } = props;
-        const { height, width } = StyleSheet.flatten(style);
-        this.containerSize = {
-            height: typeof height === 'number' ? height : 0,
-            width: typeof width === 'number' ? width : 0,
-        };
-        this.containerSizeMain = horizontal ? this.containerSize.width : this.containerSize.height;
-    }
-
     componentDidUpdate(oldProps: BaseProps) {
         const { countForItem, horizontal, onEndReached, heightForItem, numColumns = 1 } = this.props;
-        if (!this.containerSizeMain) {
+        if (!this.containerSize) {
             return;
         }
         if (countForItem < oldProps.countForItem) {
@@ -73,7 +50,7 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
         if (countForItem > 0 && this.firstOnVisibleItemsChange) {
             this.onContentOffsetChange(false);
         }
-        if (onEndReached && countForItem > 0 && this.onLoadedOffset <= this.containerSizeMain) {
+        if (onEndReached && countForItem > 0 && this.onLoadedOffset <= this.containerSize) {
             this.onEndReached(
                 Array(Math.ceil(countForItem / numColumns))
                     .fill('')
@@ -87,10 +64,10 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
 
     private onEndReached = (contentHeight: number) => {
         const { onEndReached, onEndReachedThreshold = 1 } = this.props;
-        const distanceFromEnd = contentHeight - this.contentOffset - this.containerSizeMain;
+        const distanceFromEnd = contentHeight - this.contentOffset - this.containerSize;
         if (
-            this.onLoadedOffset <= this.containerSizeMain ||
-            (distanceFromEnd <= onEndReachedThreshold * this.containerSizeMain && contentHeight > this.onLoadedOffset)
+            this.onLoadedOffset <= this.containerSize ||
+            (distanceFromEnd <= onEndReachedThreshold * this.containerSize && contentHeight > this.onLoadedOffset)
         ) {
             this.onLoadedOffset = contentHeight;
             onEndReached?.(distanceFromEnd);
@@ -112,12 +89,24 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
     private onLayout = (e: LayoutChangeEvent) => {
         const { onLayout, horizontal } = this.props;
         const { height, width } = e.nativeEvent.layout;
-        if (this.containerSize.height !== height || this.containerSize.width !== width) {
-            this.containerSize = { height, width };
-            this.containerSizeMain = horizontal ? width : height;
+        if (horizontal) {
+            if (this.containerSize !== width) {
+                this.containerSize = width;
+                this.forceUpdate();
+            }
+        } else if (this.containerSize !== height) {
+            this.containerSize = height;
             this.forceUpdate();
         }
         onLayout?.(e);
+    };
+
+    private onViewLayout = (e: LayoutChangeEvent) => {
+        const { height, width } = e.nativeEvent.layout;
+        if (this.contentSize.height !== height || this.contentSize.width !== width) {
+            this.contentSize = { height, width };
+            this.forceUpdate();
+        }
     };
 
     scrollTo = (option?: { x?: number; y?: number; animated?: boolean; duration?: number }) => {
@@ -142,17 +131,17 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
             renderForFooter,
             heightForHeader,
         } = this.props;
-        const { height, width } = this.containerSize;
+        const { height, width } = this.contentSize;
 
-        const { sumHeight } = this.getPosition();
+        const sumHeight = this.getSumHeight();
 
         const EmptyComponent = typeof ListEmptyComponent === 'function' ? ListEmptyComponent() : ListEmptyComponent;
-
         // header
         let HeaderComponent = renderForHeader?.();
         if (HeaderComponent && heightForHeader) {
             HeaderComponent = React.cloneElement(HeaderComponent, {
                 style: [
+                    { position: 'absolute' },
                     horizontal ? { height, width: heightForHeader } : { width, height: heightForHeader },
                     HeaderComponent.props.style,
                 ],
@@ -165,7 +154,7 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
             FooterComponent = React.cloneElement(FooterComponent, {
                 style: [
                     { position: 'absolute' },
-                    sumHeight > this.containerSizeMain
+                    sumHeight > this.containerSize
                         ? { [horizontal ? 'right' : 'bottom']: 0 }
                         : { [horizontal ? 'left' : 'top']: sumHeight - heightForFooter },
                     horizontal ? { height, width: heightForFooter } : { width, height: heightForFooter },
@@ -174,9 +163,6 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
             });
         }
 
-        const contentStyle = horizontal
-            ? { width: Math.max(sumHeight, width), height }
-            : { height: Math.max(sumHeight, height), width };
         return (
             <AnimatedScrollView
                 {...this.props}
@@ -184,12 +170,19 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
                 onScroll={this.onScrollEvent}
                 scrollEventThrottle={1}
                 ref={this.ref}
-                contentContainerStyle={contentStyle}
             >
-                {countForItem < 1 && EmptyComponent}
-                {HeaderComponent}
-                {this.renderMain()}
-                {FooterComponent}
+                {countForItem < 1 ? (
+                    EmptyComponent
+                ) : (
+                    <View
+                        onLayout={this.onViewLayout}
+                        style={{ flex: 1, [horizontal ? 'width' : 'height']: sumHeight }}
+                    >
+                        {HeaderComponent}
+                        {this.renderMain()}
+                        {FooterComponent}
+                    </View>
+                )}
             </AnimatedScrollView>
         );
     }

@@ -7,7 +7,7 @@ import { getItemHeight } from '../utils';
 function findRangeIndex(
     itemOffsets: { top: number; left: number }[],
     contentOffset: number,
-    containerSizeMain: number,
+    containerSize: number,
     horizontal: boolean,
 ) {
     let firstIndex = -1;
@@ -18,7 +18,7 @@ function findRangeIndex(
             firstIndex = i;
         }
         if (firstIndex > -1) {
-            if (offset > contentOffset + containerSizeMain) {
+            if (offset > contentOffset + containerSize) {
                 lastIndex = i;
                 break;
             }
@@ -51,7 +51,7 @@ export default class DiffItemHeight extends Base {
             const { firstIndex, lastIndex } = findRangeIndex(
                 this.itemOffsets,
                 this.contentOffset,
-                this.containerSizeMain,
+                this.containerSize,
                 horizontal,
             );
             if (this.firstItemIndex !== firstIndex || this.lastItemIndex !== lastIndex) {
@@ -63,7 +63,7 @@ export default class DiffItemHeight extends Base {
         }
     };
 
-    getPosition = () => {
+    getSumHeight = () => {
         const {
             countForItem,
             heightForItem,
@@ -79,8 +79,8 @@ export default class DiffItemHeight extends Base {
             .fill('')
             .map(() => heightForHeader);
 
-        if (this.containerSizeMain) {
-            const sizeOne = (horizontal ? this.containerSize.height : this.containerSize.width) / numColumns;
+        if (this.containerSize) {
+            const sizeOne = (horizontal ? this.contentSize.height : this.contentSize.width) / numColumns;
             let currentGroupIndex = 0;
             for (let i = 0; i < countForItem; i++) {
                 currentGroupIndex = groupOffset.findIndex((v) => v === Math.min(...groupOffset));
@@ -96,7 +96,7 @@ export default class DiffItemHeight extends Base {
             this.itemHeightList = itemHeightList;
             this.itemOffsets = itemOffsets;
         }
-        return { sumHeight: Math.max(...groupOffset) + heightForFooter };
+        return Math.max(...groupOffset) + heightForFooter;
     };
 
     renderMain = () => {
@@ -108,8 +108,8 @@ export default class DiffItemHeight extends Base {
                 itemHeightList={this.itemHeightList}
                 horizontal={horizontal}
                 itemOffsets={this.itemOffsets}
+                contentSize={this.contentSize}
                 containerSize={this.containerSize}
-                containerSizeMain={this.containerSizeMain}
                 preOffset={preOffset}
                 numColumns={numColumns}
             />

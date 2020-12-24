@@ -12,7 +12,7 @@
         "strict": true,
         "alwaysStrict": true,
         "outDir": "output",
-        "rootDir": "./src",
+        "rootDir": "./",
         "noUnusedLocals": true,
         "declaration": true,
         "allowJs": true,
@@ -23,6 +23,7 @@
         "output"
     ],
     "include": [
-        "./src"
+        "./src",
+        "./example"
     ]
 }
