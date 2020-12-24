@@ -17,7 +17,7 @@ export default class ShareManager extends React.PureComponent {
         }
     }
     render() {
-        const { shareGroup, inputs, outputs, renderForItem, offset, horizontal, containerSize, containerSizeMain, heightForItem, preOffset, numColumns, countForItem, } = this.props;
+        const { shareGroup, inputs, outputs, renderForItem, offset, horizontal, contentSize, containerSize, heightForItem, preOffset, numColumns, countForItem, shareStyle, } = this.props;
         return shareGroup.map((indexes, index) => {
             let transform;
             if (inputs[index].length > 1) {
@@ -30,8 +30,12 @@ export default class ShareManager extends React.PureComponent {
                     },
                 ];
             }
-            return (React.createElement(Animated.View, { key: index, style: [{ transform }, horizontal ? styles.horizontalAbs : styles.abs] },
-                React.createElement(Share, { indexes: indexes, numColumns: numColumns, renderForItem: renderForItem, ref: this.shareRefs[index], horizontal: horizontal, containerSize: containerSize, containerSizeMain: containerSizeMain, heightForItem: heightForItem, preOffset: preOffset, input: inputs[index], output: outputs[index], countForItem: countForItem })));
+            return (React.createElement(Animated.View, { key: index, style: [
+                    { transform, [horizontal ? 'width' : 'height']: heightForItem },
+                    horizontal ? styles.horizontalAbs : styles.abs,
+                    shareStyle,
+                ] },
+                React.createElement(Share, { indexes: indexes, numColumns: numColumns, renderForItem: renderForItem, ref: this.shareRefs[index], horizontal: horizontal, contentSize: contentSize, containerSize: containerSize, heightForItem: heightForItem, preOffset: preOffset, input: inputs[index], output: outputs[index], countForItem: countForItem })));
         });
     }
 }
@@ -41,12 +45,12 @@ const styles = StyleSheet.create({
         left: 0,
         top: 0,
         right: 0,
+        flexDirection: 'row',
     },
     horizontalAbs: {
         position: 'absolute',
         left: 0,
         top: 0,
         bottom: 0,
-        flexDirection: 'row',
     },
 });

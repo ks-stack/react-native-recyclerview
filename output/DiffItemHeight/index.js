@@ -2,7 +2,7 @@ import React from 'react';
 import ItemManager from './ItemManager';
 import Base from '../Base';
 import { getItemHeight } from '../utils';
-function findRangeIndex(itemOffsets, contentOffset, containerSizeMain, horizontal) {
+function findRangeIndex(itemOffsets, contentOffset, containerSize, horizontal) {
     let firstIndex = -1;
     let lastIndex = -1;
     for (let i = 0; i < itemOffsets.length; i++) {
@@ -11,7 +11,7 @@ function findRangeIndex(itemOffsets, contentOffset, containerSizeMain, horizonta
             firstIndex = i;
         }
         if (firstIndex > -1) {
-            if (offset > contentOffset + containerSizeMain) {
+            if (offset > contentOffset + containerSize) {
                 lastIndex = i;
                 break;
             }
@@ -33,7 +33,7 @@ export default class DiffItemHeight extends Base {
             const { onVisibleItemsChange, horizontal } = this.props;
             this.shareManagerRef.current?.update(this.contentOffset, isForward);
             if (onVisibleItemsChange) {
-                const { firstIndex, lastIndex } = findRangeIndex(this.itemOffsets, this.contentOffset, this.containerSizeMain, horizontal);
+                const { firstIndex, lastIndex } = findRangeIndex(this.itemOffsets, this.contentOffset, this.containerSize, horizontal);
                 if (this.firstItemIndex !== firstIndex || this.lastItemIndex !== lastIndex) {
                     this.firstOnVisibleItemsChange = false;
                     this.firstItemIndex = firstIndex;
@@ -42,15 +42,15 @@ export default class DiffItemHeight extends Base {
                 }
             }
         };
-        this.getPosition = () => {
+        this.getSumHeight = () => {
             const { countForItem, heightForItem, heightForHeader = 0, heightForFooter = 0, numColumns, horizontal, } = this.props;
             const itemHeightList = [];
             const itemOffsets = [];
             const groupOffset = Array(numColumns)
                 .fill('')
                 .map(() => heightForHeader);
-            if (this.containerSizeMain) {
-                const sizeOne = (horizontal ? this.containerSize.height : this.containerSize.width) / numColumns;
+            if (this.containerSize) {
+                const sizeOne = (horizontal ? this.contentSize.height : this.contentSize.width) / numColumns;
                 let currentGroupIndex = 0;
                 for (let i = 0; i < countForItem; i++) {
                     currentGroupIndex = groupOffset.findIndex((v) => v === Math.min(...groupOffset));
@@ -65,11 +65,11 @@ export default class DiffItemHeight extends Base {
                 this.itemHeightList = itemHeightList;
                 this.itemOffsets = itemOffsets;
             }
-            return { sumHeight: Math.max(...groupOffset) + heightForFooter };
+            return Math.max(...groupOffset) + heightForFooter;
         };
         this.renderMain = () => {
             const { renderForItem, horizontal, preOffset, numColumns } = this.props;
-            return (React.createElement(ItemManager, { ref: this.shareManagerRef, renderForItem: renderForItem, itemHeightList: this.itemHeightList, horizontal: horizontal, itemOffsets: this.itemOffsets, containerSize: this.containerSize, containerSizeMain: this.containerSizeMain, preOffset: preOffset, numColumns: numColumns }));
+            return (React.createElement(ItemManager, { ref: this.shareManagerRef, renderForItem: renderForItem, itemHeightList: this.itemHeightList, horizontal: horizontal, itemOffsets: this.itemOffsets, contentSize: this.contentSize, containerSize: this.containerSize, preOffset: preOffset, numColumns: numColumns }));
         };
         this.onScrollEvent = this.onScroll;
     }

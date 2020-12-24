@@ -1,9 +1,8 @@
 {
   "name": "@ks-stack/react-native-recyclerview",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "private": false,
   "main": "output/index.js",
-  "types": "output/index.d.ts",
   "files": [
     "src",
     "output"

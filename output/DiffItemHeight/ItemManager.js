@@ -13,14 +13,14 @@ export default class ItemManager extends React.PureComponent {
         super(...arguments);
         this.list = [];
         this.update = (contentOffset, isForward) => {
-            const { itemOffsets, containerSizeMain, preOffset, horizontal, itemHeightList } = this.props;
+            const { itemOffsets, containerSize, preOffset, horizontal, itemHeightList } = this.props;
             const arr = [];
             if (isForward || contentOffset < 50) {
                 for (let i = 0; i < itemOffsets.length; i++) {
                     const { left, top } = itemOffsets[i];
                     const offset = horizontal ? left : top;
                     if (offset >= contentOffset - preOffset * 0.2) {
-                        if (offset - itemHeightList[i] <= contentOffset + containerSizeMain + preOffset * 0.8) {
+                        if (offset - itemHeightList[i] <= contentOffset + containerSize + preOffset * 0.8) {
                             arr.push(i);
                         }
                         else {
@@ -34,7 +34,7 @@ export default class ItemManager extends React.PureComponent {
                     const { left, top } = itemOffsets[i];
                     const offset = horizontal ? left : top;
                     if (offset >= contentOffset - preOffset * 0.8) {
-                        if (offset - itemHeightList[i] <= contentOffset + containerSizeMain + preOffset * 0.2) {
+                        if (offset - itemHeightList[i] <= contentOffset + containerSize + preOffset * 0.2) {
                             arr.push(i);
                         }
                         else {
@@ -50,9 +50,9 @@ export default class ItemManager extends React.PureComponent {
         };
     }
     render() {
-        const { renderForItem, itemHeightList, horizontal, containerSize, itemOffsets, numColumns } = this.props;
+        const { renderForItem, itemHeightList, horizontal, contentSize, itemOffsets, numColumns } = this.props;
         return this.list.map((index) => {
-            const { height, width } = containerSize;
+            const { height, width } = contentSize;
             const { left, top } = itemOffsets[index];
             const offset = (horizontal ? left : top) - itemHeightList[index];
             const sizeOne = (horizontal ? height : width) / numColumns;

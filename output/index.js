@@ -2,7 +2,6 @@ import React from 'react';
 import { Platform } from 'react-native';
 import DiffItemHeight from './DiffItemHeight';
 import SameItemHeight from './SameItemHeight';
-export * from './type';
 export default class ListView extends React.PureComponent {
     constructor() {
         super(...arguments);

@@ -1,13 +1,13 @@
 import React from 'react';
-import { Animated, StyleSheet, ScrollView, } from 'react-native';
+import { Animated, ScrollView, View } from 'react-native';
 import { getItemHeight } from './utils';
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 export default class Base extends React.PureComponent {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super(...arguments);
         this.contentOffset = 0;
-        this.containerSize = { height: 0, width: 0 };
-        this.containerSizeMain = 0;
+        this.contentSize = { height: 0, width: 0 };
+        this.containerSize = 0;
         this.firstItemIndex = -1;
         this.lastItemIndex = -1;
         this.firstOnVisibleItemsChange = true;
@@ -15,9 +15,9 @@ export default class Base extends React.PureComponent {
         this.onLoadedOffset = 0;
         this.onEndReached = (contentHeight) => {
             const { onEndReached, onEndReachedThreshold = 1 } = this.props;
-            const distanceFromEnd = contentHeight - this.contentOffset - this.containerSizeMain;
-            if (this.onLoadedOffset <= this.containerSizeMain ||
-                (distanceFromEnd <= onEndReachedThreshold * this.containerSizeMain && contentHeight > this.onLoadedOffset)) {
+            const distanceFromEnd = contentHeight - this.contentOffset - this.containerSize;
+            if (this.onLoadedOffset <= this.containerSize ||
+                (distanceFromEnd <= onEndReachedThreshold * this.containerSize && contentHeight > this.onLoadedOffset)) {
                 this.onLoadedOffset = contentHeight;
                 onEndReached?.(distanceFromEnd);
             }
@@ -36,12 +36,24 @@ export default class Base extends React.PureComponent {
         this.onLayout = (e) => {
             const { onLayout, horizontal } = this.props;
             const { height, width } = e.nativeEvent.layout;
-            if (this.containerSize.height !== height || this.containerSize.width !== width) {
-                this.containerSize = { height, width };
-                this.containerSizeMain = horizontal ? width : height;
+            if (horizontal) {
+                if (this.containerSize !== width) {
+                    this.containerSize = width;
+                    this.forceUpdate();
+                }
+            }
+            else if (this.containerSize !== height) {
+                this.containerSize = height;
                 this.forceUpdate();
             }
             onLayout?.(e);
+        };
+        this.onViewLayout = (e) => {
+            const { height, width } = e.nativeEvent.layout;
+            if (this.contentSize.height !== height || this.contentSize.width !== width) {
+                this.contentSize = { height, width };
+                this.forceUpdate();
+            }
         };
         this.scrollTo = (option) => {
             this.ref.current?.scrollTo(option);
@@ -52,17 +64,10 @@ export default class Base extends React.PureComponent {
         this.flashScrollIndicators = () => {
             this.ref.current?.flashScrollIndicators();
         };
-        const { style, horizontal } = props;
-        const { height, width } = StyleSheet.flatten(style);
-        this.containerSize = {
-            height: typeof height === 'number' ? height : 0,
-            width: typeof width === 'number' ? width : 0,
-        };
-        this.containerSizeMain = horizontal ? this.containerSize.width : this.containerSize.height;
     }
     componentDidUpdate(oldProps) {
         const { countForItem, horizontal, onEndReached, heightForItem, numColumns = 1 } = this.props;
-        if (!this.containerSizeMain) {
+        if (!this.containerSize) {
             return;
         }
         if (countForItem < oldProps.countForItem) {
@@ -72,7 +77,7 @@ export default class Base extends React.PureComponent {
         if (countForItem > 0 && this.firstOnVisibleItemsChange) {
             this.onContentOffsetChange(false);
         }
-        if (onEndReached && countForItem > 0 && this.onLoadedOffset <= this.containerSizeMain) {
+        if (onEndReached && countForItem > 0 && this.onLoadedOffset <= this.containerSize) {
             this.onEndReached(Array(Math.ceil(countForItem / numColumns))
                 .fill('')
                 .reduce((sum, v, i) => sum + getItemHeight(heightForItem, i), 0));
@@ -83,13 +88,14 @@ export default class Base extends React.PureComponent {
     }
     render() {
         const { countForItem, ListEmptyComponent, horizontal, renderForHeader, heightForFooter, renderForFooter, heightForHeader, } = this.props;
-        const { height, width } = this.containerSize;
-        const { sumHeight } = this.getPosition();
+        const { height, width } = this.contentSize;
+        const sumHeight = this.getSumHeight();
         const EmptyComponent = typeof ListEmptyComponent === 'function' ? ListEmptyComponent() : ListEmptyComponent;
         let HeaderComponent = renderForHeader?.();
         if (HeaderComponent && heightForHeader) {
             HeaderComponent = React.cloneElement(HeaderComponent, {
                 style: [
+                    { position: 'absolute' },
                     horizontal ? { height, width: heightForHeader } : { width, height: heightForHeader },
                     HeaderComponent.props.style,
                 ],
@@ -100,7 +106,7 @@ export default class Base extends React.PureComponent {
             FooterComponent = React.cloneElement(FooterComponent, {
                 style: [
                     { position: 'absolute' },
-                    sumHeight > this.containerSizeMain
+                    sumHeight > this.containerSize
                         ? { [horizontal ? 'right' : 'bottom']: 0 }
                         : { [horizontal ? 'left' : 'top']: sumHeight - heightForFooter },
                     horizontal ? { height, width: heightForFooter } : { width, height: heightForFooter },
@@ -108,13 +114,9 @@ export default class Base extends React.PureComponent {
                 ],
             });
         }
-        const contentStyle = horizontal
-            ? { width: Math.max(sumHeight, width), height }
-            : { height: Math.max(sumHeight, height), width };
-        return (React.createElement(AnimatedScrollView, Object.assign({}, this.props, { onLayout: this.onLayout, onScroll: this.onScrollEvent, scrollEventThrottle: 1, ref: this.ref, contentContainerStyle: contentStyle }),
-            countForItem < 1 && EmptyComponent,
+        return (React.createElement(AnimatedScrollView, Object.assign({}, this.props, { onLayout: this.onLayout, onScroll: this.onScrollEvent, scrollEventThrottle: 1, ref: this.ref }), countForItem < 1 ? (EmptyComponent) : (React.createElement(View, { onLayout: this.onViewLayout, style: { flex: 1, [horizontal ? 'width' : 'height']: sumHeight } },
             HeaderComponent,
             this.renderMain(),
-            FooterComponent));
+            FooterComponent))));
     }
 }

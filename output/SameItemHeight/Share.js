@@ -39,19 +39,19 @@ export default class Share extends React.Component {
         }
     }
     render() {
-        const { renderForItem, horizontal, heightForItem, containerSize, indexes, numColumns, countForItem, } = this.props;
+        const { renderForItem, horizontal, heightForItem, contentSize, indexes, numColumns, countForItem } = this.props;
         const index = indexes[this.currentIndex];
         if (index < 0 || index === undefined) {
             return null;
         }
         if (numColumns === 1) {
             const style = horizontal
-                ? { width: heightForItem, height: containerSize.height }
-                : { height: heightForItem, width: containerSize.width };
+                ? { width: heightForItem, height: contentSize.height }
+                : { height: heightForItem, width: contentSize.width };
             const cell = renderForItem(index, style);
             return cell;
         }
-        const sizeOne = (horizontal ? containerSize.height : containerSize.width) / numColumns;
+        const sizeOne = (horizontal ? contentSize.height : contentSize.width) / numColumns;
         const style = horizontal
             ? { width: heightForItem, height: sizeOne }
             : { height: heightForItem, width: sizeOne };

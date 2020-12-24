@@ -14,9 +14,10 @@
         "outDir": "output",
         "rootDir": "./",
         "noUnusedLocals": true,
-        "declaration": true,
+        "declaration": false,
         "allowJs": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "skipLibCheck": true
     },
     "exclude": [
         "node_modules",

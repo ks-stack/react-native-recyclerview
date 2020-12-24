@@ -21,7 +21,7 @@ export default class SameItemHeight extends Base {
             this.shareManagerRef.current?.update(this.contentOffset, isForward);
             if (onVisibleItemsChange) {
                 const firstIndex = Math.floor(this.contentOffset / heightForItem);
-                const lastIndex = Math.ceil((this.contentOffset + this.containerSizeMain) / heightForItem);
+                const lastIndex = Math.ceil((this.contentOffset + this.containerSize) / heightForItem);
                 if (this.firstItemIndex !== firstIndex || this.lastItemIndex !== lastIndex) {
                     this.firstOnVisibleItemsChange = false;
                     this.firstItemIndex = firstIndex;
@@ -30,18 +30,18 @@ export default class SameItemHeight extends Base {
                 }
             }
         };
-        this.getPosition = () => {
+        this.getSumHeight = () => {
             const { countForItem, heightForItem, heightForHeader = 0, heightForFooter = 0, preOffset, numColumns, } = this.props;
             const inputs = [];
             const outputs = [];
             const shareGroup = [];
             let sumHeight = heightForHeader;
-            if (!this.containerSizeMain) {
-                return { sumHeight };
+            if (!this.containerSize) {
+                return sumHeight;
             }
             const itemCount = Math.ceil(countForItem / numColumns);
             const itemHeight = typeof heightForItem === 'number' ? heightForItem : 0;
-            const shareCount = Math.floor((this.containerSizeMain + preOffset) / itemHeight) + 2;
+            const shareCount = Math.floor((this.containerSize + preOffset) / itemHeight) + 2;
             const lastOffset = [];
             for (let i = 0; i < shareCount; i++) {
                 inputs.push(i === 0 ? [Number.MIN_SAFE_INTEGER] : []);
@@ -60,7 +60,7 @@ export default class SameItemHeight extends Base {
                 if (inputs[currentShareIndex].length === 0) {
                     inputs[currentShareIndex].push(Number.MIN_SAFE_INTEGER);
                 }
-                const input = sumHeight - this.containerSizeMain;
+                const input = sumHeight - this.containerSize;
                 inputs[currentShareIndex].push(input);
                 inputs[currentShareIndex].push(input);
                 if (outputs[currentShareIndex].length === 0) {
@@ -79,11 +79,11 @@ export default class SameItemHeight extends Base {
             this.shareGroup = shareGroup;
             this.inputs = inputs;
             this.outputs = outputs;
-            return { sumHeight };
+            return sumHeight;
         };
         this.renderMain = () => {
-            const { renderForItem, horizontal, heightForItem, preOffset, numColumns, countForItem } = this.props;
-            return (React.createElement(ShareManager, { shareGroup: this.shareGroup, inputs: this.inputs, outputs: this.outputs, ref: this.shareManagerRef, renderForItem: renderForItem, numColumns: numColumns, offset: this.offset, horizontal: horizontal, containerSize: this.containerSize, containerSizeMain: this.containerSizeMain, heightForItem: heightForItem, preOffset: preOffset, countForItem: countForItem }));
+            const { renderForItem, horizontal, heightForItem, preOffset, numColumns, countForItem, shareStyle, } = this.props;
+            return (React.createElement(ShareManager, { shareStyle: shareStyle, shareGroup: this.shareGroup, inputs: this.inputs, outputs: this.outputs, ref: this.shareManagerRef, renderForItem: renderForItem, numColumns: numColumns, offset: this.offset, horizontal: horizontal, contentSize: this.contentSize, containerSize: this.containerSize, heightForItem: heightForItem, preOffset: preOffset, countForItem: countForItem }));
         };
         this.offset = new Animated.Value(0);
         this.onHorizontalChange();
