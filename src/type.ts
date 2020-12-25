@@ -11,7 +11,7 @@ export interface ListViewProps extends ScrollViewProps {
     renderForItem: RenderForItem;
     renderForHeader?: () => React.ReactElement | null;
     renderForFooter?: () => React.ReactElement | null;
-    ListEmptyComponent?: () => React.ReactElement | React.ReactElement | null;
+    // ListEmptyComponent?: () => React.ReactElement | React.ReactElement | null;
 
     // marginForItem?: (index: number) => { top?: number; left?: number; right?: number; bottom?: number };
     /**

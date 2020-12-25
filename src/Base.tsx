@@ -123,8 +123,8 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
 
     render() {
         const {
-            countForItem,
-            ListEmptyComponent,
+            // countForItem,
+            // ListEmptyComponent,
             horizontal,
             renderForHeader,
             heightForFooter,
@@ -135,7 +135,7 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
 
         const sumHeight = this.getSumHeight();
 
-        const EmptyComponent = typeof ListEmptyComponent === 'function' ? ListEmptyComponent() : ListEmptyComponent;
+        // const EmptyComponent = typeof ListEmptyComponent === 'function' ? ListEmptyComponent() : ListEmptyComponent;
         // header
         let HeaderComponent = renderForHeader?.();
         if (HeaderComponent && heightForHeader) {
@@ -171,18 +171,11 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
                 scrollEventThrottle={1}
                 ref={this.ref}
             >
-                {countForItem < 1 ? (
-                    EmptyComponent
-                ) : (
-                    <View
-                        onLayout={this.onViewLayout}
-                        style={{ flex: 1, [horizontal ? 'width' : 'height']: sumHeight }}
-                    >
-                        {HeaderComponent}
-                        {this.renderMain()}
-                        {FooterComponent}
-                    </View>
-                )}
+                <View onLayout={this.onViewLayout} style={{ flex: 1, [horizontal ? 'width' : 'height']: sumHeight }}>
+                    {HeaderComponent}
+                    {this.renderMain()}
+                    {FooterComponent}
+                </View>
             </AnimatedScrollView>
         );
     }
