@@ -171,7 +171,13 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
                 scrollEventThrottle={1}
                 ref={this.ref}
             >
-                <View onLayout={this.onViewLayout} style={{ flex: 1, [horizontal ? 'width' : 'height']: sumHeight }}>
+                <View
+                    onLayout={this.onViewLayout}
+                    style={{
+                        [horizontal ? 'height' : 'width']: '100%',
+                        [horizontal ? 'width' : 'height']: sumHeight,
+                    }}
+                >
                     {HeaderComponent}
                     {this.renderMain()}
                     {FooterComponent}

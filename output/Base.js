@@ -114,7 +114,10 @@ export default class Base extends React.PureComponent {
             });
         }
         return (React.createElement(AnimatedScrollView, Object.assign({}, this.props, { onLayout: this.onLayout, onScroll: this.onScrollEvent, scrollEventThrottle: 1, ref: this.ref }),
-            React.createElement(View, { onLayout: this.onViewLayout, style: { flex: 1, [horizontal ? 'width' : 'height']: sumHeight } },
+            React.createElement(View, { onLayout: this.onViewLayout, style: {
+                    [horizontal ? 'height' : 'width']: '100%',
+                    [horizontal ? 'width' : 'height']: sumHeight,
+                } },
                 HeaderComponent,
                 this.renderMain(),
                 FooterComponent)));
