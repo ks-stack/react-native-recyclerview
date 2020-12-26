@@ -56,53 +56,51 @@ export default class SameItemHeight extends Base {
         const outputs: number[][] = [];
         const shareGroup: number[][] = [];
         let sumHeight = heightForHeader;
-        if (!this.containerSize) {
-            return sumHeight;
-        }
+        if (this.containerSize) {
+            const itemCount = Math.ceil(countForItem / numColumns);
+            const itemHeight = typeof heightForItem === 'number' ? heightForItem : 0;
+            const shareCount = Math.floor((this.containerSize + preOffset) / itemHeight) + 2;
+            const lastOffset = [];
 
-        const itemCount = Math.ceil(countForItem / numColumns);
-        const itemHeight = typeof heightForItem === 'number' ? heightForItem : 0;
-        const shareCount = Math.floor((this.containerSize + preOffset) / itemHeight) + 2;
-        const lastOffset = [];
-
-        for (let i = 0; i < shareCount; i++) {
-            inputs.push(i === 0 ? [Number.MIN_SAFE_INTEGER] : []);
-            outputs.push(i === 0 ? [sumHeight] : []);
-            lastOffset.push(sumHeight);
-            shareGroup.push([]);
-        }
-
-        let currentShareIndex = 0;
-        for (let i = 0; i < itemCount; i++) {
-            sumHeight += itemHeight;
-            shareGroup[currentShareIndex].push(i);
-
-            currentShareIndex += 1;
-            currentShareIndex %= shareCount;
-            if (i === itemCount - 1) break;
-            if (inputs[currentShareIndex].length === 0) {
-                inputs[currentShareIndex].push(Number.MIN_SAFE_INTEGER);
+            for (let i = 0; i < shareCount; i++) {
+                inputs.push(i === 0 ? [Number.MIN_SAFE_INTEGER] : []);
+                outputs.push(i === 0 ? [sumHeight] : []);
+                lastOffset.push(sumHeight);
+                shareGroup.push([]);
             }
-            // const input = sumHeight - containerSize - shareMinHeight;
-            // 位置是原生动画，不需要提前移动
-            const input = sumHeight - this.containerSize;
-            inputs[currentShareIndex].push(input);
-            inputs[currentShareIndex].push(input);
-            if (outputs[currentShareIndex].length === 0) {
+
+            let currentShareIndex = 0;
+            for (let i = 0; i < itemCount; i++) {
+                sumHeight += itemHeight;
+                shareGroup[currentShareIndex].push(i);
+
+                currentShareIndex += 1;
+                currentShareIndex %= shareCount;
+                if (i === itemCount - 1) break;
+                if (inputs[currentShareIndex].length === 0) {
+                    inputs[currentShareIndex].push(Number.MIN_SAFE_INTEGER);
+                }
+                // const input = sumHeight - containerSize - shareMinHeight;
+                // 位置是原生动画，不需要提前移动
+                const input = sumHeight - this.containerSize;
+                inputs[currentShareIndex].push(input);
+                inputs[currentShareIndex].push(input);
+                if (outputs[currentShareIndex].length === 0) {
+                    outputs[currentShareIndex].push(sumHeight);
+                    outputs[currentShareIndex].push(sumHeight);
+                } else {
+                    outputs[currentShareIndex].push(lastOffset[currentShareIndex]);
+                }
                 outputs[currentShareIndex].push(sumHeight);
-                outputs[currentShareIndex].push(sumHeight);
-            } else {
-                outputs[currentShareIndex].push(lastOffset[currentShareIndex]);
+                lastOffset[currentShareIndex] = sumHeight;
             }
-            outputs[currentShareIndex].push(sumHeight);
-            lastOffset[currentShareIndex] = sumHeight;
+            inputs.forEach((range) => range.push(Number.MAX_SAFE_INTEGER));
+            outputs.forEach((range) => range.push(range[range.length - 1]));
+            this.shareGroup = shareGroup;
+            this.inputs = inputs;
+            this.outputs = outputs;
         }
         sumHeight += heightForFooter;
-        inputs.forEach((range) => range.push(Number.MAX_SAFE_INTEGER));
-        outputs.forEach((range) => range.push(range[range.length - 1]));
-        this.shareGroup = shareGroup;
-        this.inputs = inputs;
-        this.outputs = outputs;
         return sumHeight;
     };
 

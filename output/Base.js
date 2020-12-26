@@ -87,10 +87,9 @@ export default class Base extends React.PureComponent {
         }
     }
     render() {
-        const { countForItem, ListEmptyComponent, horizontal, renderForHeader, heightForFooter, renderForFooter, heightForHeader, } = this.props;
+        const { horizontal, renderForHeader, heightForFooter, renderForFooter, heightForHeader, } = this.props;
         const { height, width } = this.contentSize;
         const sumHeight = this.getSumHeight();
-        const EmptyComponent = typeof ListEmptyComponent === 'function' ? ListEmptyComponent() : ListEmptyComponent;
         let HeaderComponent = renderForHeader?.();
         if (HeaderComponent && heightForHeader) {
             HeaderComponent = React.cloneElement(HeaderComponent, {
@@ -114,9 +113,10 @@ export default class Base extends React.PureComponent {
                 ],
             });
         }
-        return (React.createElement(AnimatedScrollView, Object.assign({}, this.props, { onLayout: this.onLayout, onScroll: this.onScrollEvent, scrollEventThrottle: 1, ref: this.ref }), countForItem < 1 ? (EmptyComponent) : (React.createElement(View, { onLayout: this.onViewLayout, style: { flex: 1, [horizontal ? 'width' : 'height']: sumHeight } },
-            HeaderComponent,
-            this.renderMain(),
-            FooterComponent))));
+        return (React.createElement(AnimatedScrollView, Object.assign({}, this.props, { onLayout: this.onLayout, onScroll: this.onScrollEvent, scrollEventThrottle: 1, ref: this.ref }),
+            React.createElement(View, { onLayout: this.onViewLayout, style: { flex: 1, [horizontal ? 'width' : 'height']: sumHeight } },
+                HeaderComponent,
+                this.renderMain(),
+                FooterComponent)));
     }
 }
