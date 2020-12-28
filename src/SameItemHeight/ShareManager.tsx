@@ -69,11 +69,7 @@ export default class ShareManager extends React.PureComponent<Props> {
             return (
                 <Animated.View
                     key={index}
-                    style={[
-                        { transform, [horizontal ? 'width' : 'height']: heightForItem },
-                        horizontal ? styles.horizontalAbs : styles.abs,
-                        shareStyle,
-                    ]}
+                    style={[{ transform }, horizontal ? styles.horizontalAbs : styles.abs, shareStyle]}
                 >
                     <Share
                         indexes={indexes}
