@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, LayoutChangeEvent, ScrollView, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native';
+import { Animated, LayoutChangeEvent, ScrollView, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { getItemHeight } from './utils';
 import { ListViewProps } from './type';
 
@@ -101,14 +101,6 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
         onLayout?.(e);
     };
 
-    private onViewLayout = (e: LayoutChangeEvent) => {
-        const { height, width } = e.nativeEvent.layout;
-        if (this.contentSize.height !== height || this.contentSize.width !== width) {
-            this.contentSize = { height, width };
-            this.forceUpdate();
-        }
-    };
-
     scrollTo = (option?: { x?: number; y?: number; animated?: boolean; duration?: number }) => {
         this.ref.current?.scrollTo(option);
     };
@@ -130,6 +122,7 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
             heightForFooter,
             renderForFooter,
             heightForHeader,
+            contentContainerStyle,
         } = this.props;
         const { height, width } = this.contentSize;
 
@@ -170,12 +163,17 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
                 onScroll={this.onScrollEvent}
                 scrollEventThrottle={1}
                 ref={this.ref}
+                contentContainerStyle={[
+                    {
+                        [horizontal ? 'height' : 'width']: '100%',
+                        [horizontal ? 'width' : 'height']: sumHeight,
+                    },
+                    contentContainerStyle,
+                ]}
             >
-                <View onLayout={this.onViewLayout} style={{ flex: 1, [horizontal ? 'width' : 'height']: sumHeight }}>
-                    {HeaderComponent}
-                    {this.renderMain()}
-                    {FooterComponent}
-                </View>
+                {HeaderComponent}
+                {this.renderMain()}
+                {FooterComponent}
             </AnimatedScrollView>
         );
     }
