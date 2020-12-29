@@ -93,10 +93,10 @@ export default class SameItemHeight extends Base {
             }
             inputs.forEach((range) => range.push(Number.MAX_SAFE_INTEGER));
             outputs.forEach((range) => range.push(range[range.length - 1]));
-            this.shareGroup = shareGroup;
-            this.inputs = inputs;
-            this.outputs = outputs;
         }
+        this.shareGroup = shareGroup;
+        this.inputs = inputs;
+        this.outputs = outputs;
         sumHeight += heightForFooter;
         return sumHeight;
     };
