@@ -10,7 +10,6 @@ interface Props {
     renderForItem: RenderForItem;
     offset: Animated.Value;
     horizontal?: boolean | null;
-    contentSize: { height: number; width: number };
     containerSize: number;
     heightForItem: number;
     preOffset: number;
@@ -46,7 +45,6 @@ export default class ShareManager extends React.PureComponent<Props> {
             renderForItem,
             offset,
             horizontal,
-            contentSize,
             containerSize,
             heightForItem,
             preOffset,
@@ -77,7 +75,6 @@ export default class ShareManager extends React.PureComponent<Props> {
                         renderForItem={renderForItem}
                         ref={this.shareRefs[index]}
                         horizontal={horizontal}
-                        contentSize={contentSize}
                         containerSize={containerSize}
                         heightForItem={heightForItem}
                         preOffset={preOffset}
@@ -94,15 +91,11 @@ export default class ShareManager extends React.PureComponent<Props> {
 const styles = StyleSheet.create({
     abs: {
         position: 'absolute',
-        // left: 0,
         top: 0,
-        // right: 0,
         flexDirection: 'row',
     },
     horizontalAbs: {
         position: 'absolute',
         left: 0,
-        // top: 0,
-        // bottom: 0,
     },
 });

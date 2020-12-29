@@ -4,8 +4,6 @@ import ShareManager from './ShareManager';
 import Base, { BaseProps } from '../Base';
 
 export default class SameItemHeight extends Base {
-    private offset: Animated.Value;
-
     private inputs: number[][] = [];
 
     private outputs: number[][] = [];
@@ -16,7 +14,6 @@ export default class SameItemHeight extends Base {
 
     constructor(props: BaseProps) {
         super(props);
-        this.offset = new Animated.Value(0);
         this.onHorizontalChange();
     }
 
@@ -56,7 +53,7 @@ export default class SameItemHeight extends Base {
         const outputs: number[][] = [];
         const shareGroup: number[][] = [];
         let sumHeight = heightForHeader;
-        if (this.containerSize) {
+        if (this.containerSize && countForItem > 0) {
             const itemCount = Math.ceil(countForItem / numColumns);
             const itemHeight = typeof heightForItem === 'number' ? heightForItem : 0;
             const shareCount = Math.floor((this.containerSize + preOffset) / itemHeight) + 2;
@@ -125,7 +122,6 @@ export default class SameItemHeight extends Base {
                 numColumns={numColumns}
                 offset={this.offset}
                 horizontal={horizontal}
-                contentSize={this.contentSize}
                 containerSize={this.containerSize}
                 heightForItem={heightForItem as number}
                 preOffset={preOffset}

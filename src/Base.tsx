@@ -20,11 +20,13 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
 
     abstract onContentOffsetChange: (isForward: boolean) => void;
 
+    public offset: Animated.Value = new Animated.Value(0);
+
     public onScrollEvent: any;
 
     public contentOffset: number = 0;
 
-    public contentSize = { height: 0, width: 0 };
+    public contentSize = 0;
 
     public containerSize = 0;
 
@@ -86,6 +88,17 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
         }
     };
 
+    private onContentSizeChange = (width: number, height: number) => {
+        const { onContentSizeChange, horizontal } = this.props;
+        if (this.contentOffset > 0 && (horizontal ? width : height) < this.contentOffset + this.containerSize) {
+            this.contentOffset = Math.max(0, this.contentSize - this.containerSize);
+            this.offset.setValue(this.contentOffset);
+            this.onContentOffsetChange(true);
+            this.scrollToEnd({ animated: false });
+            onContentSizeChange?.(width, height);
+        }
+    };
+
     private onLayout = (e: LayoutChangeEvent) => {
         const { onLayout, horizontal } = this.props;
         const { height, width } = e.nativeEvent.layout;
@@ -101,7 +114,7 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
         onLayout?.(e);
     };
 
-    scrollTo = (option?: { x?: number; y?: number; animated?: boolean; duration?: number }) => {
+    scrollTo = (option: { x?: number; y?: number; animated?: boolean; duration?: number }) => {
         this.ref.current?.scrollTo(option);
     };
 
@@ -115,8 +128,6 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
 
     render() {
         const {
-            // countForItem,
-            // ListEmptyComponent,
             horizontal,
             renderForHeader,
             heightForFooter,
@@ -124,18 +135,18 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
             heightForHeader,
             contentContainerStyle,
         } = this.props;
-        const { height, width } = this.contentSize;
 
-        const sumHeight = this.getSumHeight();
+        this.contentSize = this.getSumHeight();
 
-        // const EmptyComponent = typeof ListEmptyComponent === 'function' ? ListEmptyComponent() : ListEmptyComponent;
         // header
         let HeaderComponent = renderForHeader?.();
         if (HeaderComponent && heightForHeader) {
             HeaderComponent = React.cloneElement(HeaderComponent, {
                 style: [
                     { position: 'absolute' },
-                    horizontal ? { height, width: heightForHeader } : { width, height: heightForHeader },
+                    horizontal
+                        ? { width: heightForHeader, height: '100%' }
+                        : { height: heightForHeader, width: '100%' },
                     HeaderComponent.props.style,
                 ],
             });
@@ -147,10 +158,12 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
             FooterComponent = React.cloneElement(FooterComponent, {
                 style: [
                     { position: 'absolute' },
-                    sumHeight > this.containerSize
+                    this.contentSize > this.containerSize
                         ? { [horizontal ? 'right' : 'bottom']: 0 }
-                        : { [horizontal ? 'left' : 'top']: sumHeight - heightForFooter },
-                    horizontal ? { height, width: heightForFooter } : { width, height: heightForFooter },
+                        : { [horizontal ? 'left' : 'top']: this.contentSize - heightForFooter },
+                    horizontal
+                        ? { width: heightForFooter, height: '100%' }
+                        : { height: heightForFooter, width: '100%' },
                     FooterComponent.props.style,
                 ],
             });
@@ -163,10 +176,11 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
                 onScroll={this.onScrollEvent}
                 scrollEventThrottle={1}
                 ref={this.ref}
+                onContentSizeChange={this.onContentSizeChange}
                 contentContainerStyle={[
                     {
                         [horizontal ? 'height' : 'width']: '100%',
-                        [horizontal ? 'width' : 'height']: sumHeight,
+                        [horizontal ? 'width' : 'height']: Math.max(this.contentSize, this.containerSize),
                     },
                     contentContainerStyle,
                 ]}

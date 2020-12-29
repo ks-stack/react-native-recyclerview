@@ -5,12 +5,12 @@ import type { ListViewProps } from './type';
 import DiffItemHeight from './DiffItemHeight';
 import SameItemHeight from './SameItemHeight';
 
-export type { ItemStyle, RenderForItem, ListViewProps } from './type';
+export type { RenderForItem, ListViewProps } from './type';
 
 export default class ListView extends React.PureComponent<ListViewProps> {
     private ref = React.createRef<SameItemHeight | DiffItemHeight>();
 
-    scrollTo = (option?: { x?: number; y?: number; animated?: boolean; duration?: number }) => {
+    scrollTo = (option: { x?: number; y?: number; animated?: boolean; duration?: number }) => {
         this.ref.current?.scrollTo(option);
     };
 

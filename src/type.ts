@@ -1,8 +1,8 @@
 import { ScrollViewProps, ViewStyle } from 'react-native';
 
-export type ItemStyle = { position?: 'absolute'; height: number; width: number; top?: number; left?: number };
+// export type ItemStyle = { position?: 'absolute'; height: number; width: number; top?: number; left?: number };
 
-export type RenderForItem = (index: number, style: ItemStyle) => React.ReactElement;
+export type RenderForItem = (index: number) => React.ReactElement;
 
 export interface ListViewProps extends ScrollViewProps {
     countForItem: number;
