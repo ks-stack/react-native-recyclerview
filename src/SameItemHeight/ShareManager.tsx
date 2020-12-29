@@ -64,6 +64,10 @@ export default class ShareManager extends React.PureComponent<Props> {
                     },
                 ];
             }
+            if (!transform) {
+                // eslint-disable-next-line no-console
+                console.warn('@ks-stack/react-native-recyclerview组件的ShareManager类中transform转换有问题');
+            }
             return (
                 <Animated.View
                     key={index}

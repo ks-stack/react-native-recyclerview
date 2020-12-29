@@ -49,11 +49,11 @@ export default class SameItemHeight extends Base {
             preOffset,
             numColumns,
         } = this.props;
-        const inputs: number[][] = [];
-        const outputs: number[][] = [];
+        let inputs: number[][] = [];
+        let outputs: number[][] = [];
         const shareGroup: number[][] = [];
         let sumHeight = heightForHeader;
-        if (this.containerSize && countForItem > 0) {
+        if (this.containerSize) {
             const itemCount = Math.ceil(countForItem / numColumns);
             const itemHeight = typeof heightForItem === 'number' ? heightForItem : 0;
             const shareCount = Math.floor((this.containerSize + preOffset) / itemHeight) + 2;
@@ -91,12 +91,22 @@ export default class SameItemHeight extends Base {
                 outputs[currentShareIndex].push(sumHeight);
                 lastOffset[currentShareIndex] = sumHeight;
             }
-            inputs.forEach((range) => range.push(Number.MAX_SAFE_INTEGER));
-            outputs.forEach((range) => range.push(range[range.length - 1]));
+            if (itemCount === 0) {
+                let sum = sumHeight;
+                outputs = outputs.map(() => {
+                    const res = [sum, sum];
+                    sum += heightForItem as number;
+                    return res;
+                });
+                inputs = inputs.map(() => [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]);
+            } else {
+                inputs.forEach((range) => range.push(Number.MAX_SAFE_INTEGER));
+                outputs.forEach((range) => range.push(range[range.length - 1] || 0));
+            }
+            this.shareGroup = shareGroup;
+            this.inputs = inputs;
+            this.outputs = outputs;
         }
-        this.shareGroup = shareGroup;
-        this.inputs = inputs;
-        this.outputs = outputs;
         sumHeight += heightForFooter;
         return sumHeight;
     };
