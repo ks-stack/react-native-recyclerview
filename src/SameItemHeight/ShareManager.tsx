@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, StyleSheet, ViewStyle } from 'react-native';
+import { Animated, ViewStyle } from 'react-native';
 import Share from './Share';
 import { RenderForItem } from '../type';
 
@@ -15,6 +15,7 @@ interface Props {
     preOffset: number;
     numColumns: number;
     countForItem: number;
+    heightForHeader: number;
     shareStyle?: ViewStyle;
 }
 
@@ -51,6 +52,7 @@ export default class ShareManager extends React.PureComponent<Props> {
             numColumns,
             countForItem,
             shareStyle,
+            heightForHeader,
         } = this.props;
         return shareGroup.map((indexes, index) => {
             let transform: any;
@@ -59,7 +61,7 @@ export default class ShareManager extends React.PureComponent<Props> {
                     {
                         [horizontal ? 'translateX' : 'translateY']: offset.interpolate({
                             inputRange: inputs[index],
-                            outputRange: outputs[index],
+                            outputRange: outputs[index].map((v) => v - heightForHeader),
                         }),
                     },
                 ];
@@ -71,7 +73,15 @@ export default class ShareManager extends React.PureComponent<Props> {
             return (
                 <Animated.View
                     key={index}
-                    style={[{ transform }, horizontal ? styles.horizontalAbs : styles.abs, shareStyle]}
+                    style={[
+                        {
+                            transform,
+                            position: 'absolute',
+                            [horizontal ? 'left' : 'top']: heightForHeader,
+                            flexDirection: horizontal ? undefined : 'row',
+                        },
+                        shareStyle,
+                    ]}
                 >
                     <Share
                         indexes={indexes}
@@ -91,15 +101,3 @@ export default class ShareManager extends React.PureComponent<Props> {
         });
     }
 }
-
-const styles = StyleSheet.create({
-    abs: {
-        position: 'absolute',
-        top: 0,
-        flexDirection: 'row',
-    },
-    horizontalAbs: {
-        position: 'absolute',
-        left: 0,
-    },
-});

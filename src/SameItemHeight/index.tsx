@@ -116,6 +116,7 @@ export default class SameItemHeight extends Base {
             renderForItem,
             horizontal,
             heightForItem,
+            heightForHeader,
             preOffset,
             numColumns,
             countForItem,
@@ -136,6 +137,7 @@ export default class SameItemHeight extends Base {
                 heightForItem={heightForItem as number}
                 preOffset={preOffset}
                 countForItem={countForItem}
+                heightForHeader={heightForHeader}
             />
         );
     };

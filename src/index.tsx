@@ -23,7 +23,13 @@ export default class ListView extends React.PureComponent<ListViewProps> {
     };
 
     render() {
-        const { preOffset = Platform.OS === 'ios' ? 200 : 800, numColumns = 1, horizontal, heightForItem } = this.props;
+        const {
+            preOffset = Platform.OS === 'ios' ? 200 : 800,
+            numColumns = 1,
+            horizontal,
+            heightForItem,
+            heightForHeader = 0,
+        } = this.props;
         const C = typeof heightForItem === 'number' ? SameItemHeight : DiffItemHeight;
         return (
             <C
@@ -32,6 +38,7 @@ export default class ListView extends React.PureComponent<ListViewProps> {
                 preOffset={preOffset}
                 numColumns={numColumns}
                 horizontal={horizontal || false}
+                heightForHeader={heightForHeader}
             />
         );
     }

@@ -9,6 +9,7 @@ export interface BaseProps extends ListViewProps {
     preOffset: number;
     numColumns: number;
     horizontal: boolean;
+    heightForHeader: number;
 }
 
 export default abstract class Base extends React.PureComponent<BaseProps> {
