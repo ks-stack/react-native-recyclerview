@@ -49,66 +49,57 @@ export default class SameItemHeight extends Base {
             preOffset,
             numColumns,
         } = this.props;
-        let inputs: number[][] = [];
-        let outputs: number[][] = [];
+        const inputs: number[][] = [];
+        const outputs: number[][] = [];
         const shareGroup: number[][] = [];
-        let sumHeight = heightForHeader;
+        let shareCurrentOffset = heightForHeader;
+        const itemCount = Math.ceil(countForItem / numColumns);
         if (this.containerSize) {
-            const itemCount = Math.ceil(countForItem / numColumns);
             const itemHeight = typeof heightForItem === 'number' ? heightForItem : 0;
             const shareCount = Math.floor((this.containerSize + preOffset) / itemHeight) + 2;
             const lastOffset = [];
 
             for (let i = 0; i < shareCount; i++) {
                 inputs.push(i === 0 ? [Number.MIN_SAFE_INTEGER] : []);
-                outputs.push(i === 0 ? [sumHeight] : []);
-                lastOffset.push(sumHeight);
+                outputs.push(i === 0 ? [shareCurrentOffset] : []);
+                lastOffset.push(shareCurrentOffset);
                 shareGroup.push([]);
             }
 
             let currentShareIndex = 0;
-            for (let i = 0; i < itemCount; i++) {
-                sumHeight += itemHeight;
+            const minItemCount = Math.max(itemCount, shareCount);
+            for (let i = 0; i < minItemCount; i++) {
+                shareCurrentOffset += itemHeight;
                 shareGroup[currentShareIndex].push(i);
 
                 currentShareIndex += 1;
                 currentShareIndex %= shareCount;
-                if (i === itemCount - 1) break;
+                if (i === minItemCount - 1) break;
                 if (inputs[currentShareIndex].length === 0) {
                     inputs[currentShareIndex].push(Number.MIN_SAFE_INTEGER);
                 }
                 // const input = sumHeight - containerSize - shareMinHeight;
                 // 位置是原生动画，不需要提前移动
-                const input = sumHeight - this.containerSize;
+                const input = shareCurrentOffset - this.containerSize;
                 inputs[currentShareIndex].push(input);
                 inputs[currentShareIndex].push(input);
                 if (outputs[currentShareIndex].length === 0) {
-                    outputs[currentShareIndex].push(sumHeight);
-                    outputs[currentShareIndex].push(sumHeight);
+                    outputs[currentShareIndex].push(shareCurrentOffset);
+                    outputs[currentShareIndex].push(shareCurrentOffset);
                 } else {
                     outputs[currentShareIndex].push(lastOffset[currentShareIndex]);
                 }
-                outputs[currentShareIndex].push(sumHeight);
-                lastOffset[currentShareIndex] = sumHeight;
+                outputs[currentShareIndex].push(shareCurrentOffset);
+                lastOffset[currentShareIndex] = shareCurrentOffset;
             }
-            if (itemCount === 0) {
-                let sum = sumHeight;
-                outputs = outputs.map(() => {
-                    const res = [sum, sum];
-                    sum += heightForItem as number;
-                    return res;
-                });
-                inputs = inputs.map(() => [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]);
-            } else {
-                inputs.forEach((range) => range.push(Number.MAX_SAFE_INTEGER));
-                outputs.forEach((range) => range.push(range[range.length - 1] || 0));
-            }
+            inputs.forEach((range) => range.push(Number.MAX_SAFE_INTEGER));
+            outputs.forEach((range) => range.push(range[range.length - 1] || 0));
             this.shareGroup = shareGroup;
             this.inputs = inputs;
             this.outputs = outputs;
         }
-        sumHeight += heightForFooter;
-        return sumHeight;
+
+        return heightForHeader + itemCount * (heightForItem as number) + heightForFooter;
     };
 
     renderMain = () => {

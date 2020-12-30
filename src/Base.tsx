@@ -186,8 +186,8 @@ export default abstract class Base extends React.PureComponent<BaseProps> {
                     contentContainerStyle,
                 ]}
             >
-                {HeaderComponent}
                 {this.renderMain()}
+                {HeaderComponent}
                 {FooterComponent}
             </AnimatedScrollView>
         );
