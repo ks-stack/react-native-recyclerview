@@ -65,8 +65,11 @@ export default class Share extends React.Component<Props> {
             return null;
         }
         if (numColumns === 1) {
-            const cell = renderForItem(index);
-            return cell;
+            if (index < countForItem) {
+                const cell = renderForItem(index);
+                return cell;
+            }
+            return null;
         }
         return (
             <>
