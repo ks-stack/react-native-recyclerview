@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import ListView, { ItemStyle } from '../src';
+import ListView from '../src';
 import images from './images';
 import Item from './Item';
 
@@ -22,7 +22,7 @@ export default class App extends React.Component<Props> {
         return { right: 10 };
     };
 
-    renderForItem = (index: number, style: ItemStyle) => <Item index={index} style={style} data={images[index]} />;
+    renderForItem = (index: number) => <Item index={index} data={images[index]} />;
 
     renderForHeader = () => {
         return (
