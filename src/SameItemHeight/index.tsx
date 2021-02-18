@@ -48,6 +48,7 @@ export default class SameItemHeight extends Base {
             heightForFooter = 0,
             preOffset,
             numColumns,
+            renderForFooter,
         } = this.props;
         const inputs: number[][] = [];
         const outputs: number[][] = [];
@@ -99,7 +100,7 @@ export default class SameItemHeight extends Base {
             this.outputs = outputs;
         }
 
-        return heightForHeader + itemCount * (heightForItem as number) + heightForFooter;
+        return heightForHeader + itemCount * (heightForItem as number) + (renderForFooter?.() ? heightForFooter : 0);
     };
 
     renderMain = () => {
